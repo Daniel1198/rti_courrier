@@ -1,1 +1,70 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Inter&display=swap');
+
+* {
+    font-family: 'Montserrat';
+    color: rgba(0, 0, 0, 0.589);
+}
+
+.bg-green {
+    background-color: #54aa8dc7;
+}
+
+.bg-blue {
+    background-color: #5483aac7;
+}
+
+.txt-green {
+    color: #54aa8dc7;
+}
+
+.txt-blue {
+    color: #5483aac7;
+}
+
+.fine {
+    font-weight: 100;
+    color: rgb(241, 241, 241);
+}
+
+label {
+    font-size: small;
+}
+
+.bg-img {
+    background: url('assets/images/5591276.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+}
+
+.btn-blue {
+    background-color: #5483aac7;
+    color: white;
+    border-radius: 5px;
+    width: 100%;
+    outline: none;
+    border: none;
+    padding-block: 7px;
+    font-family: 'Inter';
+}
+
+.btn-blue:hover {
+    background-color: #416583c7;
+}
+
+.rd-left {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.login-card {
+    border-radius: 10px;
+    height: 500px;
+}
+
+.bg-img-card {
+    background: linear-gradient(#54aa8dc7, #54aa8dc7), url('assets/images/5026563.jpg');
+    background-position: center;
+    background-size: cover;
+}
