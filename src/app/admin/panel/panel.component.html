@@ -1,0 +1,80 @@
+<header style="height: 8vh;" class="bg-green">
+    <div class="container d-flex align-items-center h-100 justify-content-between">
+        <div class="d-flex">
+            <img src="favicon.ico" alt="logo" width="50">
+            <h6 class="text-white ms-2">Mail Manager</h6>
+        </div>
+        <div class="d-flex align-items-center">
+            <label class="me-3 text-white" style="font-family: 'Inter';">Administrator</label>
+            <button 
+                class="btn btn-sm btn-light" 
+                (click)="SignOut()" 
+                data-bs-toggle="tooltip" 
+                data-bs-placement="right" 
+                title="Déconnexion">
+                <fa-icon [icon]="faPowerOff"></fa-icon>
+            </button>
+        </div>
+    </div>
+</header>
+<div style="height: 92vh;" class="w3-animate-left d-flex">
+    <div class="w-25 p-5">
+        <div class="w-100 h-100 shadow-sm p-3" style="border-radius: 10px;">
+            <div class="d-flex align-items-center">
+                <div 
+                    class="rounded-circle" 
+                    style="width: 70px; height: 70px; border: 1px solid #5483aac7; padding: 1px;">
+                    <img src="assets/images/avatar.png" class="w-100 h-100 rounded-circle shadow">
+                </div>
+                <div class="ms-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <small>Bienvenue !</small>
+                        <strong style="font-size: small;" class="d-block">Administrator</strong>
+                    </div>
+                    <a href="#" class="btn btn-sm ms-3">
+                        <fa-icon [icon]="faPencil"></fa-icon>
+                    </a>
+                </div>
+            </div>
+            
+            <hr class="mb-1">
+
+            <small>
+                <strong>MENU</strong>
+            </small>
+
+            <div class="mt-2">
+                <ul>
+                    <li routerLinkActive="active shadow">
+                        <a routerLink="/admin/dashboard">
+                            <fa-icon [icon]="faChartPie" class="me-3"></fa-icon>
+                            Tableau de bord
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <fa-icon [icon]="faMailBulk" class="me-3"></fa-icon>
+                            Mes courriers
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <fa-icon [icon]="faSearch" class="me-3"></fa-icon>
+                            Recherche
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <fa-icon [icon]="faCog" class="me-3"></fa-icon>
+                            Administration
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="w-75 p-3 overflow-auto">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+

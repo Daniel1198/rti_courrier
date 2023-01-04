@@ -1,6 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Inter&display=swap');
 
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #5483aac7;
+}
+
 * {
     font-family: 'Montserrat';
     color: rgba(0, 0, 0, 0.589);

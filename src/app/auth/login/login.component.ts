@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
+import { Router } from '@angular/router';
+import { faEnvelope, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'app-login',
@@ -9,8 +10,20 @@ import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 export class LoginComponent {
 
   faEnvelope = faEnvelope;
-  faLock = faLock;
+  faEye = faEye;
+  faEyeSlash = faEyeSlash;
+  visible: boolean = false;
 
-  constructor() {}
+  constructor(
+    private router: Router
+  ) {}
+
+  onVisible() {
+    this.visible = !this.visible;
+  }
+
+  onSubmit() {
+    this.router.navigate(['/admin'])
+  }
 
 }

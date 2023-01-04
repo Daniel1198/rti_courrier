@@ -49,7 +49,7 @@
             <div class="px-4 text-center" style="font-size: small;">
                 Identifiez-vous afin d'avoir accès à l'application. En cas de problème, contactez votre administrateur.
             </div>
-            <form action="" class="mt-4 w-75">
+            <form action="" class="mt-4 w-75" (submit)="onSubmit()">
                 <div class="form-group mb-3">
                     <div class="group shadow-sm">
                         <input type="text" id="email" placeholder="Email">
@@ -58,8 +58,8 @@
                 </div>
                 <div class="form-group mb-3">
                     <div class="group shadow-sm">
-                        <input type="password" id="password" placeholder="Mot de passe">
-                        <fa-icon [icon]="faLock"></fa-icon>
+                        <input [type]="visible ? 'text' : 'password'" id="password" placeholder="Mot de passe">
+                        <fa-icon [icon]="visible ? faEyeSlash : faEye" (click)="onVisible()" style="cursor: pointer;"></fa-icon>
                     </div>
                 </div>
                 <div class="form-check mb-3">
