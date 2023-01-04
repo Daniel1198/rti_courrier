@@ -1,4 +1,4 @@
-<header style="height: 8vh;" class="bg-green">
+<header style="height: 8vh;" class="bg-green shadow">
     <div class="container d-flex align-items-center h-100 justify-content-between">
         <div class="d-flex">
             <img src="favicon.ico" alt="logo" width="50">
@@ -18,7 +18,7 @@
     </div>
 </header>
 <div style="height: 92vh;" class="w3-animate-left d-flex">
-    <div class="w-25 p-5">
+    <div class="w-25 px-5 py-4">
         <div class="w-100 h-100 shadow-sm p-3" style="border-radius: 10px;">
             <div class="d-flex align-items-center">
                 <div 
@@ -51,20 +51,20 @@
                             Tableau de bord
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
+                    <li routerLinkActive="active shadow">
+                        <a routerLink="/admin/mail-list">
                             <fa-icon [icon]="faMailBulk" class="me-3"></fa-icon>
                             Mes courriers
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
+                    <li routerLinkActive="active shadow">
+                        <a routerLink="/admin/search">
                             <fa-icon [icon]="faSearch" class="me-3"></fa-icon>
                             Recherche
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
+                    <li routerLinkActive="active shadow">
+                        <a routerLink="/admin/settings">
                             <fa-icon [icon]="faCog" class="me-3"></fa-icon>
                             Administration
                         </a>
@@ -73,8 +73,11 @@
             </div>
         </div>
     </div>
-    <div class="w-75 p-3 overflow-auto">
+    <div class="w-75 py-4 pe-3 ps-1 overflow-auto">
         <router-outlet></router-outlet>
+        <footer class="bg-light text-center p-4">
+            <small class="text-muted mt-5">&mdash; RTI@Service courrier &mdash;</small>
+        </footer>
     </div>
 </div>
 
