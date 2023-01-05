@@ -2,7 +2,10 @@
     <div class="bg-light px-3 pt-1">
         <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Mes courriers</li>
+                <li class="breadcrumb-item">
+                    <a routerLink="/admin/registry">Registres</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Courriers service couverture</li>
             </ol>
         </nav>    
     </div>
@@ -11,7 +14,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <input type="search" placeholder="Tapez votre recherche..." class="w3-input w3-border w-50">
             <div class="d-flex w-50 ms-5">
-                <button class="btn-green px-3" [routerLink]="['/admin/edit-mail', 0]">
+                <button class="btn-green px-3" [routerLink]="['/admin/registry/edit-mail', 0, 0]">
                     <fa-icon [icon]="faEnvelope"></fa-icon>&nbsp;
                     Nouveau courrier
                 </button>
@@ -29,8 +32,7 @@
                         <th>N°.</th>
                         <th>Date rcp.</th>
                         <th>Date trs.</th>
-                        <th>Nom exp.</th>
-                        <th>Adresse exp.</th>
+                        <th>Expéditeur.</th>
                         <th>Objet.</th>
                         <th>Service dest.</th>
                         <th>P-J.</th>
@@ -48,7 +50,6 @@
                         <td>18/04/2023</td>
                         <td>20/05/2023</td>
                         <td>Alexandre Henry</td>
-                        <td>04 BP 75 Abidjan</td>
                         <td>Demande de stage</td>
                         <td>Service stage et formation</td>
                         <td><a href="#" class="txt-blue">Cliquez ici</a></td>

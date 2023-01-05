@@ -10,6 +10,8 @@ import { SearchMailComponent } from './search-mail/search-mail.component';
 import { AdministrationComponent } from './administration/administration.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { EditMailComponent } from './edit-mail/edit-mail.component';
+import { RegistryPanelComponent } from './registry-panel/registry-panel.component';
+import { RegistryComponent } from './registry/registry.component';
 
 
 @NgModule({
@@ -19,7 +21,9 @@ import { EditMailComponent } from './edit-mail/edit-mail.component';
     MailListComponent,
     SearchMailComponent,
     AdministrationComponent,
-    EditMailComponent
+    EditMailComponent,
+    RegistryPanelComponent,
+    RegistryComponent
   ],
   imports: [
     CommonModule,

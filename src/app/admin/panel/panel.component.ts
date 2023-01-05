@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { faChartPie, faCog, faMailBulk, faPencil, faPowerOff, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faChartPie, faCog, faFolderTree, faPencil, faPowerOff, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-panel',
@@ -11,7 +11,7 @@ export class PanelComponent {
   faPowerOff = faPowerOff
   faPencil = faPencil
   faChartPie = faChartPie
-  faMailBulk = faMailBulk
+  faFolderTree = faFolderTree
   faSearch = faSearch
   faCog = faCog
 
