@@ -1,0 +1,101 @@
+<div class="w3-animate-right">
+    <div class="bg-light px-3 pt-1">
+        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a routerLink="/admin/mail-list">Mes courriers</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Nouveau courrier</li>
+            </ol>
+        </nav>    
+    </div>
+    <div class="content mt-4">
+        <div class="w3-border p-2 d-flex align-items-center bg-blue text-white">
+            <img src="assets/images/email.png" alt="" class="me-3">
+            Nouveau courrier
+        </div>
+        <div class="mt-1 p-3">
+            <form action="" class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="numero" class="form-label">Numéro du courrier.</label>
+                        <input type="text" class="w3-border w3-input" id="numero">
+                    </div>
+                </div>
+                <div class="col-6 row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="dateenvoi" class="form-label">Date de reception.</label>
+                            <input type="date" class="w3-border w3-input" id="dateenvoi">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="dateretour" class="form-label">Date de transmission.</label>
+                            <input type="date" class="w3-border w3-input" id="dateretour">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 mt-3">
+                    <div class="form-group">
+                        <label for="nom" class="form-label">Nom de l'expéditeur.</label>
+                        <input type="text" class="w3-border w3-input" id="nom">
+                    </div>
+                </div>
+                <div class="col-6 mt-3">
+                    <div class="form-group">
+                        <label for="adresse" class="form-label">Adresse de l'expéditeur.</label>
+                        <input type="text" class="w3-border w3-input" id="adresse">
+                    </div>
+                </div>
+                <div class="col-12 mt-3">
+                    <div class="form-group">
+                        <label for="adresse" class="form-label">Objet.</label>
+                        <input type="text" class="w3-border w3-input" id="adresse">
+                    </div>
+                </div>
+                <div class="col-8 mt-3">
+                    <div class="form-group">
+                        <label for="service" class="form-label">Service.</label>
+                        <select class="w3-select w3-border" id="service">
+                            <option value="" disabled selected>--- Choisissez le service ---</option>
+                            <option value="1">Option 1</option>
+                            <option value="2">Option 2</option>
+                            <option value="3">Option 3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-4 mt-3">
+                    <div class="form-group">
+                        <label class="form-label">Ajouter une pièce jointe.</label>
+                        <label for="pj" class="form-label btn-orange p-2 text-center" style="cursor: pointer;">Pièce jointe</label>
+                        <input type="file" id="pj">
+                    </div>
+                </div>
+                <div class="mt-3 col-12 row">
+                    <div class="d-flex align-items-center py-1 w3-border-bottom mb-3">
+                        <img src="assets/images/attached-file.png" alt="" class="me-3">
+                        Vos pièces jointes
+                    </div>
+                    <div class="col-3 d-flex mb-3" *ngFor="let n of [].constructor(5)">
+                        <div class="chip rounded-pill">
+                            <a href="#">ma_pièce_jointe.pdf</a>
+                        </div>
+                        <button type="button" class="btn">
+                            &#215;
+                        </button>
+                    </div>
+                </div>
+                <div class="m-auto w-50 d-flex mt-4">
+                    <button type="button" routerLink="/admin/mail-list" class="btn-red">
+                        Retour
+                    </button>
+
+                    <button type="submit" class="btn-green ms-3">
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

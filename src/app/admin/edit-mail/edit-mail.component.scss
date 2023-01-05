@@ -1,0 +1,14 @@
+.content {
+    font-family: 'Inter';
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="file"] {
+    width: 0px;
+    visibility: hidden;
+    position: absolute;
+	z-index: -1;
+}

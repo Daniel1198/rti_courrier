@@ -9,6 +9,7 @@ import { MailListComponent } from './mail-list/mail-list.component';
 import { SearchMailComponent } from './search-mail/search-mail.component';
 import { AdministrationComponent } from './administration/administration.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { EditMailComponent } from './edit-mail/edit-mail.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     DashboardComponent,
     MailListComponent,
     SearchMailComponent,
-    AdministrationComponent
+    AdministrationComponent,
+    EditMailComponent
   ],
   imports: [
     CommonModule,
