@@ -12,6 +12,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { EditMailComponent } from './edit-mail/edit-mail.component';
 import { RegistryPanelComponent } from './registry-panel/registry-panel.component';
 import { RegistryComponent } from './registry/registry.component';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { RegistryComponent } from './registry/registry.component';
     CommonModule,
     AdminRoutingModule,
     FontAwesomeModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    SweetAlert2Module.forRoot()
   ]
 })
 export class AdminModule { }

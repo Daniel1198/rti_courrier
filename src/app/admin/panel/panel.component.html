@@ -8,12 +8,24 @@
             <label class="me-3 text-white" style="font-family: 'Inter';">Administrator</label>
             <button 
                 class="btn btn-sm btn-light" 
-                (click)="SignOut()" 
+                [swal]="signout" 
                 data-bs-toggle="tooltip" 
                 data-bs-placement="right" 
                 title="Déconnexion">
                 <fa-icon [icon]="faPowerOff"></fa-icon>
             </button>
+
+            <swal
+                #signout
+                cancelButtonText="Non"
+                confirmButtonText="Oui"
+                title="Déconnexion"
+                text="Voulez-vous quitter cette session."
+                icon="question"
+                [showCancelButton]="true"
+                [focusCancel]="true"
+                (confirm)="SignOut()">
+            </swal>
         </div>
     </div>
 </header>
