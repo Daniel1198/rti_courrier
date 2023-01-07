@@ -137,3 +137,10 @@ table {
     background-color: rgb(226, 226, 226);
     color: #5483aac7;
 }
+
+input[type="file"] {
+    width: 0px;
+    visibility: hidden;
+    position: absolute;
+	z-index: -1;
+}

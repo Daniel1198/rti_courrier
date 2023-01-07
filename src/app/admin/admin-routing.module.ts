@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdministrationComponent } from './administration/administration.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { EditMailComponent } from './edit-mail/edit-mail.component';
+import { EditUserComponent } from './edit-user/edit-user.component';
 import { MailListComponent } from './mail-list/mail-list.component';
 import { PanelComponent } from './panel/panel.component';
 import { RegistryPanelComponent } from './registry-panel/registry-panel.component';
 import { RegistryComponent } from './registry/registry.component';
 import { SearchMailComponent } from './search-mail/search-mail.component';
+import { UsersComponent } from './users/users.component';
 
 const routes: Routes = [
   { 
@@ -20,7 +22,13 @@ const routes: Routes = [
         { path: 'edit-mail/:id/:id2', component: EditMailComponent },
       ] },
       { path: 'search', component: SearchMailComponent },
-      { path: 'settings', component: AdministrationComponent },
+      { 
+        path: 'settings', component: AdministrationComponent, children: [
+          { path: '', redirectTo: 'users', pathMatch: 'full' },
+          { path: 'users', component: UsersComponent },
+          { path: 'edit-user/:id', component: EditUserComponent }
+        ] 
+      },
     ]
   }
 ];

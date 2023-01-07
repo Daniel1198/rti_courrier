@@ -20,8 +20,8 @@
                 cancelButtonText="Non"
                 confirmButtonText="Oui"
                 title="Déconnexion"
-                text="Voulez-vous quitter cette session."
-                icon="question"
+                text="Voulez-vous quitter cette session ?"
+                icon="warning"
                 [showCancelButton]="true"
                 [focusCancel]="true"
                 (confirm)="SignOut()">
@@ -43,7 +43,7 @@
                         <small>Bienvenue !</small>
                         <strong style="font-size: small;" class="d-block">Administrator</strong>
                     </div>
-                    <a href="#" class="btn btn-sm ms-3">
+                    <a routerLink="/admin/settings/edit-user/0"class="btn btn-sm ms-3">
                         <fa-icon [icon]="faPencil"></fa-icon>
                     </a>
                 </div>

@@ -13,7 +13,8 @@ import { EditMailComponent } from './edit-mail/edit-mail.component';
 import { RegistryPanelComponent } from './registry-panel/registry-panel.component';
 import { RegistryComponent } from './registry/registry.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-
+import { UsersComponent } from './users/users.component';
+import { EditUserComponent } from './edit-user/edit-user.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,9 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     AdministrationComponent,
     EditMailComponent,
     RegistryPanelComponent,
-    RegistryComponent
+    RegistryComponent,
+    UsersComponent,
+    EditUserComponent
   ],
   imports: [
     CommonModule,
