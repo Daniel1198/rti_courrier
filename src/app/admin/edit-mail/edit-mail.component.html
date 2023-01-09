@@ -2,12 +2,6 @@
     <div class="bg-light px-3 pt-1">
         <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a routerLink="/admin/registry">Registres</a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a routerLink="/admin/registry/mail-list/0">Courriers service couverture</a>
-                </li>
                 <li class="breadcrumb-item active" aria-current="page">Nouveau courrier</li>
             </ol>
         </nav>    
@@ -21,50 +15,67 @@
             <form action="" class="row">
                 <div class="col-6">
                     <div class="form-group">
-                        <label for="numero" class="form-label">Numéro du courrier.</label>
+                        <label for="numero" class="form-label">Numéro du courrier. <span class="text-danger">*</span></label>
                         <input type="text" class="w3-border w3-input" id="numero">
                     </div>
                 </div>
                 <div class="col-6 row">
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="dateenvoi" class="form-label">Date de reception.</label>
+                            <label for="dateenvoi" class="form-label">Date de reception. <span class="text-danger">*</span></label>
                             <input type="date" class="w3-border w3-input" id="dateenvoi">
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="dateretour" class="form-label">Date de transmission.</label>
+                            <label for="dateretour" class="form-label">Date de transmission. <span class="text-danger">*</span></label>
                             <input type="date" class="w3-border w3-input" id="dateretour">
                         </div>
                     </div>
                 </div>
                 <div class="col-6 mt-3">
                     <div class="form-group">
-                        <label for="nom" class="form-label">Nom de l'expéditeur.</label>
+                        <label for="nom" class="form-label">Nom de l'expéditeur. <span class="text-danger">*</span></label>
                         <input type="text" class="w3-border w3-input" id="nom">
                     </div>
                 </div>
                 <div class="col-6 mt-3">
                     <div class="form-group">
-                        <label for="adresse" class="form-label">Adresse de l'expéditeur.</label>
-                        <input type="text" class="w3-border w3-input" id="adresse">
+                        <label for="objet" class="form-label">Objet. <span class="text-danger">*</span></label>
+                        <input type="text" class="w3-border w3-input" id="objet">
                     </div>
                 </div>
-                <div class="col-12 mt-3">
+                <div class="col-6 mt-3">
                     <div class="form-group">
-                        <label for="adresse" class="form-label">Objet.</label>
-                        <input type="text" class="w3-border w3-input" id="adresse">
+                        <label for="imputation" class="form-label">Imputation.</label>
+                        <input type="text" class="w3-border w3-input" id="imputation">
                     </div>
                 </div>
-                <div class="col-8 mt-3">
+                <div class="col-6 mt-3">
                     <div class="form-group">
-                        <label for="service" class="form-label">Service.</label>
+                        <label for="annotation" class="form-label">Annotation.</label>
+                        <input type="text" class="w3-border w3-input" id="annotation">
+                    </div>
+                </div>
+                <div class="col-4 mt-3">
+                    <div class="form-group">
+                        <label for="service" class="form-label">Service. <span class="text-danger">*</span></label>
                         <select class="w3-select w3-border" id="service">
                             <option value="" disabled selected>--- Choisissez le service ---</option>
                             <option value="1">Option 1</option>
                             <option value="2">Option 2</option>
                             <option value="3">Option 3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-4 mt-3">
+                    <div class="form-group">
+                        <label for="registre" class="form-label">Registre. <span class="text-danger">*</span></label>
+                        <select class="w3-select w3-border" id="registre">
+                            <option value="" disabled selected>--- Choisissez le registre ---</option>
+                            <option value="1">Registre couverture</option>
+                            <option value="2">Registre DG</option>
+                            <option value="3">Registre publicité</option>
                         </select>
                     </div>
                 </div>
@@ -90,7 +101,7 @@
                     </div>
                 </div>
                 <div class="m-auto w-50 d-flex mt-4">
-                    <button type="button" routerLink="/admin/registry/mail-list/0" class="btn-red">
+                    <button type="button" (click)="onBack()" class="btn-red">
                         Retour
                     </button>
 

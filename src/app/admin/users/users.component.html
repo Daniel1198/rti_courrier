@@ -31,9 +31,20 @@
                             </div>
                         </div>
     
-                        <button class="btn btn-sm h-auto">
-                            <fa-icon [icon]="faAlignRight"></fa-icon>
-                        </button>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-sm h-auto" id="dropdownMenuButton1" data-bs-toggle="dropdown">
+                                <fa-icon [icon]="faEllipsisVertical"></fa-icon>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="#">Voir le profile complet</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Editer le compte</a></li>
+                                <li><a class="dropdown-item" href="#">Changer le mot de passe</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Supprimer le compte</a></li>
+                                <li><a class="dropdown-item" href="#">Désactiver le compte</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

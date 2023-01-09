@@ -6,4 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./edit-mail.component.scss']
 })
 export class EditMailComponent {
+  onBack() {
+    history.back();
+  }
 }

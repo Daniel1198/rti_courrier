@@ -19,7 +19,7 @@ const routes: Routes = [
       { path: 'registry', component: RegistryPanelComponent, children: [
         { path: '', component: RegistryComponent },
         { path: 'mail-list/:id', component: MailListComponent },
-        { path: 'edit-mail/:id/:id2', component: EditMailComponent },
+        { path: 'edit-mail/:id', component: EditMailComponent },
       ] },
       { path: 'search', component: SearchMailComponent },
       { 

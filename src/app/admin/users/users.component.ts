@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { faAlignRight, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faAlignRight, faEllipsisVertical, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-users',
@@ -8,5 +8,5 @@ import { faAlignRight, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 })
 export class UsersComponent {
   faUserPlus = faUserPlus
-  faAlignRight = faAlignRight
+  faEllipsisVertical = faEllipsisVertical
 }
