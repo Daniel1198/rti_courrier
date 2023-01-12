@@ -8,4 +8,8 @@ import { faCamera } from '@fortawesome/free-solid-svg-icons';
 })
 export class EditUserComponent {
   faCamera = faCamera
+
+  onBack() {
+    history.back();
+  }
 }
