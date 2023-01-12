@@ -1,3 +1,124 @@
-<div class="w3-animate-right p-3">
-    
+<div class="w3-animate-right">
+    <div class="header d-flex pb-2 w3-border-bottom align-items-center justify-content-between">
+        <div>
+            <h3><strong class="txt-blue m-0">Statistiques des courriers</strong></h3>
+            <small class="m-0">{{ 'du 09 au 13 Janvier' | uppercase }}</small>
+        </div>
+
+        <div class="d-flex align-items-center">
+            <label for="debut" class="me-3"><strong>DU</strong></label>
+            <input type="date" id="debut" class="w3-border w3-input">
+            <label for="fin" class="mx-3"><strong>AU</strong></label>
+            <input type="date" id="fin" class="w3-border w3-input">
+        </div>
+
+        <div class="d-flex w-auto">
+            <button class="btn-green px-3" routerLink="/admin/registry/edit-mail/0">
+                <fa-icon [icon]="faEnvelope"></fa-icon>
+                Nouveau courrier
+            </button>
+
+            <button class="btn-orange ms-3 w-auto px-3">
+                <fa-icon [icon]="faFileExport"></fa-icon>
+            </button>
+
+            <button class="btn-red ms-3 w-auto px-3">
+                <fa-icon [icon]="faPrint"></fa-icon>
+            </button>
+        </div>
+    </div>
+
+    <div class="p-3 row">
+        <div class="col-2"></div>
+        <div class="col-2 p-2">
+            <div class="rounded d-flex" style="height: 80px; background-color: rgb(239, 246, 255)">
+                <div class="d-flex px-3 align-items-center justify-content-between w-100">
+                    <div class="d-flex flex-column align-items-center justify-content-center">
+                        <h4 class="mb-1" style="opacity: .3;"><fa-icon [icon]="faMailBulk"></fa-icon></h4>
+                        <strong class="txt-blue">Total</strong>
+                    </div>
+                    <div class="col-4 d-flex align-items-center justify-content-end">
+                        <h4><strong style="opacity: .5; font-family: 'Roboto';">12</strong></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-2 p-2">
+            <div class="rounded d-flex" style="height: 80px; background-color: rgb(255, 239, 239)">
+                <div class="d-flex px-3 align-items-center justify-content-between w-100">
+                    <div class="d-flex flex-column align-items-center justify-content-center">
+                        <h4 class="mb-1" style="opacity: .3;"><fa-icon [icon]="faPause"></fa-icon></h4>
+                        <strong class="text-danger">En attente</strong>
+                    </div>
+                    <div class="col-4 d-flex align-items-center justify-content-end">
+                        <h4><strong style="opacity: .5; font-family: 'Roboto';">3</strong></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-2 p-2">
+            <div class="rounded d-flex" style="height: 80px; background-color: rgb(239, 255, 239)">
+                <div class="d-flex px-3 align-items-center justify-content-between w-100">
+                    <div class="d-flex flex-column align-items-center justify-content-center">
+                        <h4 class="mb-1" style="opacity: .3;"><fa-icon [icon]="faUpRightFromSquare"></fa-icon></h4>
+                        <strong class="text-success">Externe</strong>
+                    </div>
+                    <div class="col-4 d-flex align-items-center justify-content-end">
+                        <h4><strong style="opacity: .5; font-family: 'Roboto';">6</strong></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-2 p-2">
+            <div class="rounded d-flex" style="height: 80px; background-color: rgb(255, 251, 239)">
+                <div class="d-flex px-3 align-items-center justify-content-between w-100">
+                    <div class="d-flex flex-column align-items-center justify-content-center">
+                        <h4 class="mb-1" style="opacity: .3;"><fa-icon [icon]="faUserTie"></fa-icon></h4>
+                        <strong class="text-warning">Courrier DG</strong>
+                    </div>
+                    <div class="col-4 d-flex align-items-center justify-content-end">
+                        <h4><strong style="opacity: .5; font-family: 'Roboto';">1</strong></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-2"></div>
+    </div>
+
+    <div class="mt-3">
+        <p class="fw-bold txt-blue"> &bull; Statistiques des courriers par nature de la demande</p>
+        <table class="w-100">
+            <tbody>
+                <tr *ngFor="let n of data | paginate : {
+                    itemsPerPage: tableSize,
+                    currentPage: page,
+                    totalItems: count
+                  };
+                  let i = index">
+                    <td class="w-25 fw-bold pb-3">Demande de couverture médiatique institutionnelle</td>
+                    <td class="w-50 px-5">
+                        <div class="w-100 bg-light rounded" style="height: 5px;">
+                            <div class="h-100 bg-green rounded" [style.width]="300 + 'px'"></div>
+                        </div>
+                    </td>
+                    <td>11 traités</td>
+                    <td>2 en attente</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="px-5 d-flex justify-content-end align-items-center" style="font-size: smaller;" *ngIf="data.length > 0">
+            <div class="d-flex justify-content-center">
+              <pagination-controls
+                previousLabel="Précédent"
+                nextLabel="Suivant"
+                (pageChange)="onTableDataChange($event)"
+              >
+              </pagination-controls>
+            </div>
+        </div>
+    </div>
 </div>
