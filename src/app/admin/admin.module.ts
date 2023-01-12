@@ -15,6 +15,7 @@ import { RegistryComponent } from './registry/registry.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { UsersComponent } from './users/users.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { EditUserComponent } from './edit-user/edit-user.component';
     AdminRoutingModule,
     FontAwesomeModule,
     NgxPaginationModule,
+    HighchartsChartModule,
     SweetAlert2Module.forRoot()
   ]
 })
