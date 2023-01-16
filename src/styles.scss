@@ -77,8 +77,19 @@ label {
     font-family: 'Inter';
 }
 
-.btn-green:hover {
+.btn-green:hover:valid {
     background-color: #3e7e68c7;
+}
+
+.btn-invalid {
+  background-color: #f0f0f0c7;
+  color: rgb(206, 206, 206);
+  border-radius: 5px;
+  width: 100%;
+  outline: none;
+  border: none;
+  padding-block: 7px;
+  font-family: 'Inter';
 }
 
 .btn-orange {

@@ -29,10 +29,7 @@ export class DashboardComponent {
         type: 'column'
     },
     title: {
-        text: 'Statistiques Des Courriers en 2022'
-    },
-    subtitle: {
-        text: 'Source: WorldClimate.com'
+        text: 'Statistiques Des Courriers en 2022',
     },
     xAxis: {
         categories: [
@@ -59,8 +56,8 @@ export class DashboardComponent {
     },
     tooltip: {
         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name} : </td>' +
+            '<td style="padding-left:5px"><b>{point.y:.1f}</b></td></tr>',
         footerFormat: '</table>',
         shared: true,
         useHTML: true

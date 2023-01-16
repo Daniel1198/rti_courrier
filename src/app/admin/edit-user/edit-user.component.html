@@ -13,17 +13,20 @@
         <div class="w3-border p-2 fw-bold txt-blue">
             Informations utilisateur
         </div>
-        <form class="mt-3 container row p-3">
+        <div class="w-100 text-center" *ngIf="loading">
+            <app-loader></app-loader>
+        </div>
+        <form class="mt-3 container row p-3" [formGroup]="userGroup" (ngSubmit)="onSubmit()">
             <div class="col-3">
                 <div class="d-flex justify-content-center align-items-center flex-column mb-3">
                     <div style="width: 180px; height: 180px;" class="rounded-circle shadow">
-                        <img src="assets/images/avatar.png" alt="" class="w-100 h-100">
+                        <img [src]="previewImage" alt="" class="w-100 h-100 rounded-circle">
                         <button type="button" class="btn-blue mt-4">
                             <label for="pp" class="text-white px-2" style="cursor: pointer;">
                                 <fa-icon [icon]="faCamera" class="me-2"></fa-icon>
                                 Ajouter une photo
                             </label>
-                            <input type="file" id="pp">
+                            <input type="file" id="pp" multiple="false" (change)="onFileChange($event)" accept="image/png, image/gif, image/jpeg">
                         </button>
                     </div>
                 </div>
@@ -32,32 +35,31 @@
             <div class="col-9 row">
                 <div class="form-group col-6 mb-3">
                     <label for="nom" class="form-label fw-bold">Nom. <span class="text-danger">*</span></label>
-                    <input type="text" class="w3-border w3-input" placeholder="Ex : John">
+                    <input type="text" class="w3-border w3-input" placeholder="Ex : John" formControlName="lastname">
                 </div>
                 <div class="form-group col-6 mb-3">
                     <label for="nom" class="form-label fw-bold">Prénom(s). <span class="text-danger">*</span></label>
-                    <input type="text" class="w3-border w3-input" placeholder="Ex : Doe">
+                    <input type="text" class="w3-border w3-input" placeholder="Ex : Doe" formControlName="firstname">
                 </div>
                 <div class="form-group col-6 mb-3">
                     <label for="nom" class="form-label fw-bold">Adresse email. <span class="text-danger">*</span></label>
-                    <input type="text" class="w3-border w3-input" placeholder="Ex : johndoe@rti.ci">
+                    <input type="text" class="w3-border w3-input" placeholder="Ex : johndoe@rti.ci" formControlName="email">
                 </div>
                 <div class="form-group col-6 mb-3">
                     <label for="role" class="form-label fw-bold">Rôle. <span class="text-danger">*</span></label>
-                    <select class="w3-select w3-border" id="role">
+                    <select class="w3-select w3-border" id="role" formControlName="isAdmin">
                         <option value="" disabled selected>--- Choisissez le rôle ---</option>
+                        <option value="0">Simple utilisateur</option>
                         <option value="1">Administrateur</option>
-                        <option value="2">Gestionnaire</option>
-                        <option value="3">Standard</option>
                     </select>
                 </div>
                 <div class="form-group col-6 mb-3">
                     <label for="nom" class="form-label fw-bold">Mot de passe. <span class="text-danger">*</span></label>
-                    <input type="password" class="w3-border w3-input">
+                    <input type="password" class="w3-border w3-input" formControlName="password">
                 </div>
                 <div class="form-group col-6 mb-3">
                     <label for="nom" class="form-label fw-bold">Confirmer le mot de passe. <span class="text-danger">*</span></label>
-                    <input type="password" class="w3-border w3-input">
+                    <input type="password" class="w3-border w3-input" formControlName="confirmPassword">
                 </div>
                 <div class="col-6 mt-3">
                     <button type="button" class="btn-red" (click)="onBack()">
@@ -65,7 +67,7 @@
                     </button>
                 </div>
                 <div class="col-6 mt-3">
-                    <button class="btn-green">
+                    <button class="{{ userGroup.invalid ? 'btn-invalid': 'btn-green'}}" [disabled]="userGroup.invalid">
                         Enregistrer
                     </button>
                 </div>
