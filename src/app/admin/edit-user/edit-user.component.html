@@ -16,7 +16,7 @@
         <div class="w-100 text-center" *ngIf="loading">
             <app-loader></app-loader>
         </div>
-        <form class="mt-3 container row p-3" [formGroup]="userGroup" (ngSubmit)="onSubmit()">
+        <form class="mt-3 container row p-3" [formGroup]="userGroup" (ngSubmit)="verifyPassword()">
             <div class="col-3">
                 <div class="d-flex justify-content-center align-items-center flex-column mb-3">
                     <div style="width: 180px; height: 180px;" class="rounded-circle shadow">
@@ -24,7 +24,7 @@
                         <button type="button" class="btn-blue mt-4">
                             <label for="pp" class="text-white px-2" style="cursor: pointer;">
                                 <fa-icon [icon]="faCamera" class="me-2"></fa-icon>
-                                Ajouter une photo
+                                {{ id !== 0 ? 'Modifier la photo' : 'Ajouter une photo'}}
                             </label>
                             <input type="file" id="pp" multiple="false" (change)="onFileChange($event)" accept="image/png, image/gif, image/jpeg">
                         </button>
@@ -53,12 +53,12 @@
                         <option value="1">Administrateur</option>
                     </select>
                 </div>
-                <div class="form-group col-6 mb-3">
-                    <label for="nom" class="form-label fw-bold">Mot de passe. <span class="text-danger">*</span></label>
+                <div class="form-group col-6 mb-3" [hidden]="id !== 0">
+                    <label for="nom" class="form-label fw-bold">Mot de passe. <span class="text-danger" *ngIf="id === 0">*</span></label>
                     <input type="password" class="w3-border w3-input" formControlName="password">
                 </div>
-                <div class="form-group col-6 mb-3">
-                    <label for="nom" class="form-label fw-bold">Confirmer le mot de passe. <span class="text-danger">*</span></label>
+                <div class="form-group col-6 mb-3" [hidden]="id !== 0">
+                    <label for="nom" class="form-label fw-bold">Confirmer le mot de passe. <span class="text-danger" *ngIf="id === 0">*</span></label>
                     <input type="password" class="w3-border w3-input" formControlName="confirmPassword">
                 </div>
                 <div class="col-6 mt-3">
@@ -76,3 +76,5 @@
         </form>
     </div>
 </div>
+
+

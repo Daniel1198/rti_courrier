@@ -18,4 +18,20 @@ export class UserService {
   newUser(user: any): Observable<any> {
     return this.http.post(this.urlg + '/create/user.php', user);
   }
+
+  getAllUser(): Observable<any> {
+    return this.http.get<any>(this.urlg + '/read/users.php');
+  }
+
+  deleteUser(id: number): Observable<any> {
+    return this.http.get<any>(this.urlg + '/delete/user.php?id=' + id);
+  }
+
+  updateUser(user: any): Observable<any> {
+    return this.http.post<any>(this.urlg + '/update/user.php', user);
+  }
+
+  loadOneUser(id: number): Observable<any> {
+    return this.http.get<any>(this.urlg + '/read/one_user.php?id=' + id);
+  }
 }
