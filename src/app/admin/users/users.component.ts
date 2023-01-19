@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { faAlignRight, faEllipsisVertical, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { FormGroup } from '@angular/forms';
+import { faEllipsisVertical, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ConfigService } from 'src/app/services/config.service';
 import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
@@ -14,6 +16,17 @@ export class UsersComponent implements OnInit {
   faEllipsisVertical = faEllipsisVertical
   users: any[] = [];
   urlG: string;
+  Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
 
   constructor(
     private configService: ConfigService,
@@ -26,12 +39,82 @@ export class UsersComponent implements OnInit {
     this.getAllUser();
   }
 
+  async showPopPwdChange(id: number) {
+    const { value: password } = await Swal.fire({
+      title: 'Nouveau mot de passe',
+      input: 'password',
+      inputPlaceholder: 'Entrer le nouveau mot de passe',
+    })
+    
+    if (password) {
+      const { value: confirmPassword } = await Swal.fire({
+        title: 'Confirmer le nouveau mot de passe',
+        input: 'password',
+        inputPlaceholder: 'Confirmer le mot de passe',
+      });
+
+      if (confirmPassword) {
+        if (password !== confirmPassword) {
+          Swal.fire({
+            title: 'Erreur',
+            text: "Les mots de passe ne concordent pas.",
+            icon: 'error',
+            showConfirmButton: true
+          }).then(() => {
+            this.showPopPwdChange(id);
+          })
+        }
+        else {
+          const formData = new FormData();
+
+          formData.append('id', id.toString());
+          formData.append('password', password);
+
+          this.userService.changePassword(formData).subscribe(
+            response => {
+              if (response.success) {
+                this.Toast.fire({
+                  icon: 'success',
+                  title: response.message
+                })
+              }
+              else {
+                this.Toast.fire({
+                  icon: 'error',
+                  title: response.message
+                })
+              }
+            }
+          )
+        }
+      }
+    }
+  }
+
   getAllUser() {
     this.userService.getAllUser().subscribe(
       response => {
         this.users = response.results;
       }
     );
+  }
+
+  onSearch(search: string) {
+    if (search) {
+      this.userService.searchUser(search).pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      ).subscribe(
+        response => {
+          if (response.success) {
+            this.users = response.results;
+          }
+        }
+      );
+    }
+    else {
+      this.getAllUser();
+    }
   }
 
   onDelete(id: number) {
@@ -46,15 +129,12 @@ export class UsersComponent implements OnInit {
         this.userService.deleteUser(id).subscribe(
           response => {
             if (response.success) {
-              Swal.fire({
-                position: 'center',
+              this.Toast.fire({
                 icon: 'success',
-                showConfirmButton: false,
-                title: 'Utilisateur supprimé !',
-                timer: 3000
-              });
+                title: response.message
+              })
             }
-            this.users = response.results;
+            this.getAllUser();
           }
         );
       }

@@ -18,6 +18,17 @@ export class EditUserComponent implements OnInit {
   id!: number;
   loading: boolean = false;
   pwd!: string;
+  Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
 
   constructor(
     private userBuilder: FormBuilder,
@@ -64,13 +75,10 @@ export class EditUserComponent implements OnInit {
 
   verifyPassword() {
     if ((this.password as string) !== (this.confirmPassword as string)) {
-      Swal.fire({
-        position: 'center',
+      this.Toast.fire({
         icon: 'error',
-        title: 'Oops...',
-        text: 'Les mots de passe saisis ne concordent pas.',
-        showConfirmButton: true
-      });
+        title: 'Les mots de passe de concordent pas.'
+      })
     }
     else {
       this.onSubmit();
@@ -118,29 +126,25 @@ export class EditUserComponent implements OnInit {
         result => {
           if (result.success) {
             this.loading = false;
-            Swal.fire({
-              position: 'center',
+            this.Toast.fire({
               icon: 'success',
-              title: 'Compte créé avec succès !',
-              showConfirmButton: true
-            });
+              title: 'Compte créé avec succès.'
+            })
             this.userGroup.reset();
             this.previewImage = 'assets/images/avatar.png';
           }
           else {
             this.loading = false;
-            Swal.fire({
-              position: 'center',
+            this.Toast.fire({
               icon: 'error',
-              title: 'Oops...',
-              text: result.message,
-              showConfirmButton: true
-            });
+              title: result.message
+            })
           }
         }
       );
     }
     else {
+      this.loading = true;
       // transmission des données au service de modification des comptes utilisateurs
       Swal.fire({
         title: 'Les informations de cet utilisateur seront modifiées. Le confirmez-vous ? ?',
@@ -152,24 +156,20 @@ export class EditUserComponent implements OnInit {
         if (result.isConfirmed) {
           this.userService.updateUser(userData).subscribe(
             response => {
+              this.loading = false;
               if (response.success) {
-                Swal.fire({
-                  position: 'center',
+                this.Toast.fire({
                   icon: 'success',
-                  showConfirmButton: true,
-                  title: 'Informations modifiées avec succès !',
+                  title: response.message
                 }).then(() => {
                   history.back();
                 });
               }
               else {
-                Swal.fire({
-                  position: 'center',
+                this.Toast.fire({
                   icon: 'error',
-                  title: 'Oops...',
-                  text: 'Erreur lors de la modification ! Veuillez réessayer svp !',
-                  showConfirmButton: true
-                });
+                  title: response.message
+                })
               }
             }
           );
