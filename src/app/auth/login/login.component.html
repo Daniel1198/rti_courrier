@@ -49,16 +49,19 @@
             <div class="px-4 text-center" style="font-size: small;">
                 Identifiez-vous afin d'avoir accès à l'application. En cas de problème, contactez votre administrateur.
             </div>
-            <form action="" class="mt-4 w-75" (submit)="onSubmit()">
+            <div class="text-center" *ngIf="loading">
+              <app-loader></app-loader>
+            </div>
+            <form [formGroup]="formGroup" class="w-75" [ngClass]="{'mt-4': !loading}" (ngSubmit)="onSubmit()">
                 <div class="form-group mb-3">
                     <div class="group shadow-sm">
-                        <input type="text" id="email" placeholder="Email">
+                        <input type="text" id="email" placeholder="Email" formControlName="email">
                         <fa-icon [icon]="faEnvelope"></fa-icon>
                     </div>
                 </div>
                 <div class="form-group mb-3">
                     <div class="group shadow-sm">
-                        <input [type]="visible ? 'text' : 'password'" id="password" placeholder="Mot de passe">
+                        <input [type]="visible ? 'text' : 'password'" id="password" placeholder="Mot de passe" formControlName="password">
                         <fa-icon [icon]="visible ? faEyeSlash : faEye" (click)="onVisible()" style="cursor: pointer;"></fa-icon>
                     </div>
                 </div>
@@ -66,7 +69,7 @@
                     <input type="checkbox" id="remember" class="form-check-input">
                     <label for="remember" class="form-check-label">Se souvenir de moi</label>
                 </div>
-                <input type="submit" value="Connexion" class="btn-blue">
+                <input type="submit" value="Connexion" [class]="formGroup.invalid ? 'btn-invalid' : 'btn-blue'" [disabled]="formGroup.invalid">
             </form>
 
             <small class="text-muted mt-5">&mdash; RTI@Service courrier &mdash;</small>
