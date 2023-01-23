@@ -5,19 +5,19 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { LoaderComponent } from '../loader/loader.component';
+import { LoaderModule } from '../loader/loader.module';
 
 
 @NgModule({
   declarations: [
-    LoginComponent,
-    LoaderComponent
+    LoginComponent
   ],
   imports: [
     CommonModule,
     AuthRoutingModule,
     FontAwesomeModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LoaderModule
   ]
 })
 export class AuthModule { }

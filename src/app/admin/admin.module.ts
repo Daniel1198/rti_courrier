@@ -16,8 +16,8 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { UsersComponent } from './users/users.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { HighchartsChartModule } from 'highcharts-angular';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LoaderComponent } from '../loader/loader.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { LoaderModule } from '../loader/loader.module';
 
 @NgModule({
   declarations: [
@@ -30,8 +30,7 @@ import { LoaderComponent } from '../loader/loader.component';
     RegistryPanelComponent,
     RegistryComponent,
     UsersComponent,
-    EditUserComponent,
-    LoaderComponent
+    EditUserComponent
   ],
   imports: [
     CommonModule,
@@ -40,6 +39,7 @@ import { LoaderComponent } from '../loader/loader.component';
     NgxPaginationModule,
     HighchartsChartModule,
     ReactiveFormsModule,
+    LoaderModule,
     SweetAlert2Module.forRoot()
   ]
 })
