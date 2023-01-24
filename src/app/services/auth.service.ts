@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import jwtDecode from 'jwt-decode';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigService } from './config.service';
@@ -36,6 +37,13 @@ export class AuthService {
   logoutUser() {
       localStorage.removeItem('access_token');
       this.loggedUserSubject.next(null!);
+      location.reload();
+  }
+
+  get currentUser() {
+    let token = localStorage.getItem('access_token');
+    if (!token) return null;
+    return jwtDecode(token);
   }
 
   public get accessTokenValue(){
