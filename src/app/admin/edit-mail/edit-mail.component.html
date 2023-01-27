@@ -28,7 +28,7 @@
                     </div>
                     <div class="col-6">
                         <div class="form-group">
-                            <label for="dateretour" class="form-label">Date de transmission. <span class="text-danger">*</span></label>
+                            <label for="dateretour" class="form-label">Date de transmission.</label>
                             <input type="date" class="w3-border w3-input" id="dateretour">
                         </div>
                     </div>
@@ -59,12 +59,12 @@
                 </div>
                 <div class="col-4 mt-3">
                     <div class="form-group">
-                        <label for="service" class="form-label">Service. <span class="text-danger">*</span></label>
+                        <label for="service" class="form-label">Correspondant. <span class="text-danger">*</span></label>
                         <select class="w3-select w3-border" id="service">
-                            <option value="" disabled selected>--- Choisissez le service ---</option>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="3">Option 3</option>
+                            <option value="">--- Choisir le correspondant interne ---</option>
+                            <option 
+                            *ngFor="let service of services"
+                            [value]="service.id">{{ service.label }}</option>
                         </select>
                     </div>
                 </div>
