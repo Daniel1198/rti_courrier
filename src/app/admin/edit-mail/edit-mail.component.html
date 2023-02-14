@@ -36,7 +36,14 @@
                 <div class="col-6 mt-3">
                     <div class="form-group">
                         <label for="nom" class="form-label">Nom de l'expéditeur. <span class="text-danger">*</span></label>
-                        <input type="text" class="w3-border w3-input" id="nom">
+                        <input type="text" class="w3-border w3-input" list="expediteur">
+                        <datalist id="expediteur">
+                            <select>
+                                <option 
+                                *ngFor="let service of services"
+                                [value]="service.label">{{ service.label }}</option>
+                            </select>
+                        </datalist>
                     </div>
                 </div>
                 <div class="col-6 mt-3">
@@ -60,12 +67,12 @@
                 <div class="col-4 mt-3">
                     <div class="form-group">
                         <label for="service" class="form-label">Correspondant. <span class="text-danger">*</span></label>
-                        <select class="w3-select w3-border" id="service">
-                            <option value="">--- Choisir le correspondant interne ---</option>
+                        <input type="text" class="w3-border w3-input" list="service">
+                        <datalist id="service">
                             <option 
                             *ngFor="let service of services"
-                            [value]="service.id">{{ service.label }}</option>
-                        </select>
+                            [value]="service.label">{{ service.label }}</option>
+                        </datalist>
                     </div>
                 </div>
 
@@ -73,7 +80,7 @@
                     <div class="form-group">
                         <label class="form-label">Ajouter une pièce jointe.</label>
                         <label for="pj" class="form-label btn-orange p-2 text-center" style="cursor: pointer;">Pièce jointe</label>
-                        <input type="file" id="pj">
+                        <input type="file" id="pj" multiple (change)="onFileChange($event)">
                     </div>
                 </div>
                 <div class="mt-3 col-12 row">
@@ -81,11 +88,11 @@
                         <img src="assets/images/attached-file.png" alt="" class="me-3">
                         Vos pièces jointes
                     </div>
-                    <div class="col-3 d-flex mb-3" *ngFor="let n of [].constructor(5)">
-                        <div class="chip rounded-pill">
-                            <a href="#">ma_pièce_jointe.pdf</a>
+                    <div class="col-3 d-flex mb-3" *ngFor="let file of files; let i = index">
+                        <div class="chip rounded-pill w-100">
+                            <a href="#" class="text-overflow">{{ file.name }}</a>
                         </div>
-                        <button type="button" class="btn">
+                        <button type="button" class="btn" (click)="removeFile(i)">
                             &#215;
                         </button>
                     </div>

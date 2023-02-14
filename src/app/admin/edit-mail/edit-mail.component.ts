@@ -9,6 +9,7 @@ import { ReceiverService } from 'src/app/services/receiver.service';
 export class EditMailComponent implements OnInit {
 
   services: any[] = []
+  files: any[] = [];
 
   constructor(
     private receiverService: ReceiverService
@@ -28,5 +29,21 @@ export class EditMailComponent implements OnInit {
 
   onBack() {
     history.back();
+  }
+
+  onFileChange(event: any) {
+    if (event.target.files.length > 0) {
+      for (let i = 0; i < event.target.files.length; i++) {
+        this.files.push(event.target.files[i]);
+      }
+      
+      // this.formGroup.patchValue({
+      //   photo: file
+      // });
+    }
+  }
+
+  removeFile(index: number) {
+    this.files.splice(index, 1);
   }
 }
