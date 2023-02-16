@@ -12,31 +12,29 @@
             Nouveau courrier
         </div>
         <div class="mt-1 p-3">
-            <form action="" class="row">
-                <div class="col-6">
+            <form class="row" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+                <!-- <div class="col-6">
                     <div class="form-group">
                         <label for="numero" class="form-label">Numéro du courrier. <span class="text-danger">*</span></label>
-                        <input type="text" class="w3-border w3-input" id="numero">
+                        <input type="text" class="w3-border w3-input" id="numero" formControlName="id">
+                    </div>
+                </div> -->
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="dateenvoi" class="form-label">Date de reception. <span class="text-danger">*</span></label>
+                        <input type="date" class="w3-border w3-input" id="dateenvoi" formControlName="dateReceived">
                     </div>
                 </div>
-                <div class="col-6 row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="dateenvoi" class="form-label">Date de reception. <span class="text-danger">*</span></label>
-                            <input type="date" class="w3-border w3-input" id="dateenvoi">
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="dateretour" class="form-label">Date de transmission.</label>
-                            <input type="date" class="w3-border w3-input" id="dateretour">
-                        </div>
+                <div class="col-6" [hidden]="id === 0">
+                    <div class="form-group">
+                        <label for="dateretour" class="form-label">Date de transmission. <span class="text-danger">*</span></label>
+                        <input type="date" class="w3-border w3-input" id="dateretour" formControlName="shippingDate">
                     </div>
                 </div>
-                <div class="col-6 mt-3">
+                <div class="col-6 {{ id > 0 ? 'mt-3' : ''}}">
                     <div class="form-group">
                         <label for="nom" class="form-label">Nom de l'expéditeur. <span class="text-danger">*</span></label>
-                        <input type="text" class="w3-border w3-input" list="expediteur">
+                        <input type="text" class="w3-border w3-input" list="expediteur" formControlName="corresponding">
                         <datalist id="expediteur">
                             <select>
                                 <option 
@@ -49,25 +47,25 @@
                 <div class="col-6 mt-3">
                     <div class="form-group">
                         <label for="objet" class="form-label">Objet. <span class="text-danger">*</span></label>
-                        <input type="text" class="w3-border w3-input" id="objet">
+                        <input type="text" class="w3-border w3-input" id="objet" formControlName="object">
                     </div>
                 </div>
-                <div class="col-6 mt-3">
+                <div class="col-6 mt-3" [hidden]="id === 0">
                     <div class="form-group">
                         <label for="imputation" class="form-label">Imputation.</label>
-                        <input type="text" class="w3-border w3-input" id="imputation">
+                        <input type="text" class="w3-border w3-input" id="imputation" formControlName="imputation">
+                    </div>
+                </div>
+                <div class="col-6 mt-3" [hidden]="id === 0">
+                    <div class="form-group">
+                        <label for="annotation" class="form-label">Annotation.</label>
+                        <input type="text" class="w3-border w3-input" id="annotation" formControlName="annotation">
                     </div>
                 </div>
                 <div class="col-6 mt-3">
                     <div class="form-group">
-                        <label for="annotation" class="form-label">Annotation.</label>
-                        <input type="text" class="w3-border w3-input" id="annotation">
-                    </div>
-                </div>
-                <div class="col-4 mt-3">
-                    <div class="form-group">
                         <label for="service" class="form-label">Correspondant. <span class="text-danger">*</span></label>
-                        <input type="text" class="w3-border w3-input" list="service">
+                        <input type="text" class="w3-border w3-input" list="service" formControlName="idReceiver">
                         <datalist id="service">
                             <option 
                             *ngFor="let service of services"
@@ -80,7 +78,7 @@
                     <div class="form-group">
                         <label class="form-label">Ajouter une pièce jointe.</label>
                         <label for="pj" class="form-label btn-orange p-2 text-center" style="cursor: pointer;">Pièce jointe</label>
-                        <input type="file" id="pj" multiple (change)="onFileChange($event)">
+                        <input type="file" id="pj" multiple="multiple" (change)="onFileChange($event)" formControlName="atta">
                     </div>
                 </div>
                 <div class="mt-3 col-12 row">
@@ -102,7 +100,7 @@
                         Retour
                     </button>
 
-                    <button type="submit" class="btn-green ms-3">
+                    <button type="submit" class="ms-3 {{ formGroup.invalid ? 'btn-invalid' : 'btn-green' }}" [disabled]="formGroup.invalid">
                         Enregistrer
                     </button>
                 </div>
