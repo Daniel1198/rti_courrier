@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { faEllipsisVertical, faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { ConfigService } from 'src/app/services/config.service';
 import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
@@ -15,7 +13,9 @@ export class UsersComponent implements OnInit {
   faUserPlus = faUserPlus
   faEllipsisVertical = faEllipsisVertical
   users: any[] = [];
+  data: any[] = [];
   urlG: string;
+  loading: boolean = false;
   Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -69,6 +69,8 @@ export class UsersComponent implements OnInit {
 
           formData.append('id', id.toString());
           formData.append('password', password);
+          formData.append('new_password', password);
+          formData.append('is_first_connection', '0');
 
           this.userService.changePassword(formData).subscribe(
             response => {
@@ -92,25 +94,22 @@ export class UsersComponent implements OnInit {
   }
 
   getAllUser() {
+    this.loading = true;
     this.userService.getAllUser().subscribe(
       response => {
+        this.loading = false;
         this.users = response.results;
+        this.data = response.results;
       }
     );
   }
 
   onSearch(search: string) {
     if (search) {
-      this.userService.searchUser(search).pipe(
-        debounceTime(1000),
-        distinctUntilChanged()
-      ).subscribe(
-        response => {
-          if (response.success) {
-            this.users = response.results;
-          }
-        }
-      );
+      this.users = this.data.filter(user => {
+        const name = user.lastname + ' ' + user.firstname;
+        return name.toLowerCase().includes(search.toLowerCase());
+      });
     }
     else {
       this.getAllUser();
@@ -126,8 +125,10 @@ export class UsersComponent implements OnInit {
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
+        this.loading = true;
         this.userService.deleteUser(id).subscribe(
           response => {
+            this.loading = false;
             if (response.success) {
               this.Toast.fire({
                 icon: 'success',

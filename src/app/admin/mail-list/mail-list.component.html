@@ -5,7 +5,7 @@
                 <li class="breadcrumb-item">
                     <a routerLink="/admin/registry">Registres</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Arrivée</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ register ? register.label : '' }}</li>
             </ol>
         </nav>    
     </div>
@@ -35,7 +35,6 @@
                         <th>Expéditeur.</th>
                         <th>Objet.</th>
                         <th>Service dest.</th>
-                        <th>P-J.</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -52,13 +51,15 @@
                         <td>Alexandre Henry</td>
                         <td>Demande de stage</td>
                         <td>Service stage et formation</td>
-                        <td><a href="#" class="txt-blue">Cliquez ici</a></td>
-                        <td class="d-flex">
-                            <button class="btn-blue">
-                                <fa-icon [icon]="faPencil"></fa-icon>
+                        <td class="d-flex justify-content-end">
+                            <button class="btn btn-outline-info btn-sm me-3">
+                                <fa-icon [icon]="faEye"></fa-icon>
                             </button>
-                            <button class="btn-red ms-2">
-                                <fa-icon [icon]="faTrash"></fa-icon>
+                            <button class="btn btn-outline-success btn-sm me-3">
+                                <fa-icon [icon]="faCheck"></fa-icon>
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm">
+                                <fa-icon [icon]="faPencil"></fa-icon>
                             </button>
                         </td>
                     </tr>

@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   visible: boolean = false;
   formGroup!: FormGroup;
   loading: boolean = false;
+  cu: any;
 
   Toast = Swal.mixin({
     toast: true,
@@ -63,7 +64,13 @@ export class LoginComponent implements OnInit {
       response => {
         this.loading = false;
         if (response.success) {
-          this.router.navigate(['/admin/dashboard']);
+          this.cu = this.authService.currentUser;
+          if (this.cu.data.isFirstConnection == 1) {
+            this.router.navigate(['/admin/dashboard']);
+          }
+          else {
+            this.router.navigate(['/auth/change-password/' + this.cu.data.id]);
+          }
         }
         else {
           this.Toast.fire({

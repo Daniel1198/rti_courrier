@@ -12,24 +12,13 @@
             Registres
         </div>
         <div class="mt-2 row px-3 py-3">
-            <div class="col-2">
-                <a routerLink="/admin/registry/mail-list/0" class="btn btn-light d-flex flex-column w-auto justify-content-center align-items-center">
-                    <img src="assets/images/folder.png" alt="">
-                    <small>Registre arrivée</small>
-                </a>
+            <div class="text-center" *ngIf="loading">
+                <app-loader></app-loader>
             </div>
-
-            <div class="col-2">
-                <a routerLink="/admin/registry/mail-list/0" class="btn btn-light d-flex flex-column w-auto justify-content-center align-items-center">
+            <div class="col-2" *ngFor="let register of registers">
+                <a [routerLink]="['/admin/registry/mail-list', register.id]" class="btn btn-light d-flex flex-column w-auto justify-content-center align-items-center">
                     <img src="assets/images/folder.png" alt="">
-                    <small>Registre départ</small>
-                </a>
-            </div>
-
-            <div class="col-2">
-                <a routerLink="/admin/registry/mail-list/0" class="btn btn-light d-flex flex-column w-auto justify-content-center align-items-center">
-                    <img src="assets/images/folder.png" alt="">
-                    <small>Registre DG</small>
+                    <small>{{ register.label }}</small>
                 </a>
             </div>
         </div>

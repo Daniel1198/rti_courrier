@@ -38,8 +38,4 @@ export class UserService {
   changePassword(data: any): Observable<any> {
     return this.http.post<any>(this.urlg + '/update/change_user_password.php', data);
   }
-
-  searchUser(search:string): Observable<any> {
-    return this.http.get<any>(this.urlg + '/read/search_user.php?search=' + search);
-  }
 }

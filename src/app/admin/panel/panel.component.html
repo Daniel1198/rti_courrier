@@ -1,11 +1,13 @@
-<header style="height: 8vh;" class="bg-green shadow">
+<header style="height: 8vh;" class="bg-green shadow-sm">
     <div class="container d-flex align-items-center h-100 justify-content-between">
         <div class="d-flex">
             <img src="favicon.ico" alt="logo" width="50">
             <h6 class="text-white ms-2">Mail Manager</h6>
         </div>
         <div class="d-flex align-items-center">
-            <label class="me-3 text-white" style="font-family: 'Inter';">Administrator</label>
+            <label class="me-3 text-white" style="font-family: 'Inter';">
+                {{ currentUser.data.lastname + ' ' + currentUser.data.firstname}}
+            </label>
             <button 
                 class="btn btn-sm btn-light" 
                 [swal]="signout" 
@@ -30,23 +32,25 @@
     </div>
 </header>
 <div style="height: 92vh;" class="w3-animate-left d-flex">
-    <div class="w-25 px-5 py-4">
-        <div class="w-100 h-100 bg-light shadow-sm p-3" style="border-radius: 10px;">
+    <div class="py-4 w3-border-right bg-light shadow-sm" style="width: 20%;">
+        <div class="w-100 h-100 p-3">
             <div class="d-flex align-items-center">
                 <div 
                     class="rounded-circle" 
-                    style="width: 70px; height: 70px; border: 1px solid #5483aac7; padding: 1px;">
-                    <img src="assets/images/avatar.png" class="w-100 h-100 rounded-circle shadow">
+                    style="width: 70px; height: 70px; border: 1px solid #5483aac7; padding: 2px;">
+                    <img [src]="urlG + currentUser.data.image" class="w-100 h-100 rounded-circle shadow">
                 </div>
                 <div class="ms-3 d-flex justify-content-between align-items-center">
                     <div>
                         <small>Bienvenue !</small>
-                        <strong style="font-size: small;" class="d-block">Administrator</strong>
+                        <strong style="font-size: small;" class="d-block">
+                            {{ currentUser.data.lastname + ' ' + currentUser.data.firstname }}.
+                        </strong>
                     </div>
                 </div>
             </div>
             
-            <hr class="mb-1">
+            <hr class="mb-3 w3-border">
 
             <small>
                 <strong>MENU</strong>
@@ -62,8 +66,8 @@
                     </li>
                     <li routerLinkActive="active shadow">
                         <a routerLink="/admin/registry">
-                            <fa-icon [icon]="faFolderTree" class="me-3"></fa-icon>
-                            Registres
+                            <fa-icon [icon]="faEnvelopesBulk" class="me-3"></fa-icon>
+                            Courriers
                         </a>
                     </li>
                     <li routerLinkActive="active shadow">
@@ -72,7 +76,7 @@
                             Recherche
                         </a>
                     </li>
-                    <li routerLinkActive="active shadow">
+                    <li routerLinkActive="active shadow" *ngIf="currentUser.data.isAdmin == 1">
                         <a routerLink="/admin/settings">
                             <fa-icon [icon]="faCog" class="me-3"></fa-icon>
                             Administration
@@ -82,7 +86,7 @@
             </div>
         </div>
     </div>
-    <div class="w-75 py-4 pe-3 ps-1 overflow-auto">
+    <div class="py-4 px-5 overflow-auto" style="width: 80%;">
         <router-outlet></router-outlet>
         <footer class="bg-light text-center p-4">
             <small class="text-muted mt-5">&mdash; RTI@Service courrier &mdash;</small>
