@@ -16,9 +16,9 @@
                 <app-loader></app-loader>
             </div>
             <div class="col-2" *ngFor="let register of registers">
-                <a [routerLink]="['/admin/registry/mail-list', register.id]" class="btn btn-light d-flex flex-column w-auto justify-content-center align-items-center">
+                <a [routerLink]="['/admin/registry/mail-list', register.reg_id]" class="btn btn-light d-flex flex-column w-auto justify-content-center align-items-center">
                     <img src="assets/images/folder.png" alt="">
-                    <small>{{ register.label }}</small>
+                    <small>{{ register.reg_label }}</small>
                 </a>
             </div>
         </div>

@@ -90,13 +90,13 @@ export class EditUserComponent implements OnInit {
       this.userService.loadOneUser(this.id).subscribe(
         response => {
           if (response.success) {
-            this.previewImage = this.configService.urlg + response.results[0].image;
+            this.previewImage = this.configService.urlg + response.results[0].user_image;
             this.userGroup.patchValue({
-              id: response.results[0].id,
-              lastname: response.results[0].lastname,
-              firstname: response.results[0].firstname,
-              email: response.results[0].email,
-              isAdmin: response.results[0].isadmin,
+              id: response.results[0].user_id,
+              lastname: response.results[0].user_lastname,
+              firstname: response.results[0].user_firstname,
+              email: response.results[0].user_email,
+              isAdmin: response.results[0].user_isadmin,
             })
           }
         }
@@ -111,12 +111,12 @@ export class EditUserComponent implements OnInit {
     const userData = new FormData();
 
     // récupération des informations saisies pour la transmission
-    userData.append('id', this.userGroup.get('id')?.value);
-    userData.append('lastname', this.userGroup.get('lastname')?.value);
-    userData.append('firstname', this.userGroup.get('firstname')?.value);
-    userData.append('email', this.userGroup.get('email')?.value);
-    userData.append('is_admin', this.userGroup.get('isAdmin')?.value);
-    userData.append('password', this.userGroup.get('password')?.value);
+    userData.append('user_id', this.userGroup.get('id')?.value);
+    userData.append('user_lastname', this.userGroup.get('lastname')?.value);
+    userData.append('user_firstname', this.userGroup.get('firstname')?.value);
+    userData.append('user_email', this.userGroup.get('email')?.value);
+    userData.append('user_is_admin', this.userGroup.get('isAdmin')?.value);
+    userData.append('user_password', this.userGroup.get('password')?.value);
     userData.append('user_profile', this.userGroup.get('image')?.value);
 
     if (this.id === 0) {
@@ -144,7 +144,6 @@ export class EditUserComponent implements OnInit {
       );
     }
     else {
-      this.loading = true;
       // transmission des données au service de modification des comptes utilisateurs
       Swal.fire({
         title: 'Les informations de cet utilisateur seront modifiées. Le confirmez-vous ? ?',
@@ -152,6 +151,7 @@ export class EditUserComponent implements OnInit {
         confirmButtonText: 'Oui',
         denyButtonText: `Non`,
       }).then((result) => {
+        this.loading = true;
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
           this.userService.updateUser(userData).subscribe(

@@ -19,7 +19,7 @@ export class MailService {
     return this.http.post(this.urlg + '/create/mail.php', mail);
   }
 
-  getAllUser(): Observable<any> {
+  getAllMails(): Observable<any> {
     return this.http.get<any>(this.urlg + '/read/mails.php');
   }
 }

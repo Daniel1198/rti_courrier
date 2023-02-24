@@ -52,23 +52,27 @@ export class EditMailComponent implements OnInit {
       shippingDate: ['', this.id > 0 ? Validators.required : Validators.nullValidator],
       imputation: [''],
       annotation: [''],
-      idReceiver: ['', Validators.required],
-      attachments: ['']
+      idService: ['', Validators.required]
     });
   }
 
   onSubmit() {
     const formData = new FormData();
 
-    formData.append('id', this.formGroup.get('id')?.value);
-    formData.append('corresponding', this.formGroup.get('corresponding')?.value);
-    formData.append('object', this.formGroup.get('object')?.value);
-    formData.append('date_received', this.formGroup.get('dateReceived')?.value);
-    formData.append('shipping_date', this.formGroup.get('shippingDate')?.value);
-    formData.append('imputation', this.formGroup.get('imputation')?.value);
-    formData.append('annotation', this.formGroup.get('annotation')?.value);
-    formData.append('id_receiver', this.formGroup.get('idReceiver')?.value);
-    formData.append('attachments', JSON.stringify({attachments: this.files}));
+    const service = this.services.find((service: any) => service.serv_label == this.formGroup.get('idService')?.value)
+
+    formData.append('mail_id', this.formGroup.get('id')?.value);
+    formData.append('mail_corresponding', this.formGroup.get('corresponding')?.value);
+    formData.append('mail_object', this.formGroup.get('object')?.value);
+    formData.append('mail_date_received', this.formGroup.get('dateReceived')?.value);
+    formData.append('mail_shipping_date', this.formGroup.get('shippingDate')?.value);
+    formData.append('mail_imputation', this.formGroup.get('imputation')?.value);
+    formData.append('mail_annotation', this.formGroup.get('annotation')?.value);
+    formData.append('id_service', service.serv_id);
+    
+    for (let i = 0; i < this.files.length; i++) {
+      formData.append('attachments[]', this.files[i]);
+    }
 
     if (this.id === 0) {
       this.mailService.newMail(formData).subscribe(
@@ -77,7 +81,9 @@ export class EditMailComponent implements OnInit {
             this.Toast.fire({
               icon: 'success',
               title: response.message
-            })
+            });
+            this.formGroup.reset();
+            this.files = [];
           }
           else {
             this.Toast.fire({

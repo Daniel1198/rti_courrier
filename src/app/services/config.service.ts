@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class ConfigService {
 
-  urlg = 'http://localhost/RTI_COURRIER_API';
+  urlg = 'http://localhost/api';
   
   constructor() { 
 

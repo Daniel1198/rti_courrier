@@ -37,7 +37,7 @@ export class MailListComponent implements OnInit {
   getAllRegister() {
     this.registerService.getAllRegister().subscribe(
       response => {
-        this.register = response.results.find((register: any) => register.id == this.id);
+        this.register = response.results.find((register: any) => register.reg_id == this.id);
       }
     )
   }

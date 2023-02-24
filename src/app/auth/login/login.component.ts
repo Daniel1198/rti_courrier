@@ -57,19 +57,19 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     const formData = new FormData();
 
-    formData.append('email', this.formGroup.get('email')?.value);
-    formData.append('pwd', this.formGroup.get('password')?.value);
+    formData.append('user_email', this.formGroup.get('email')?.value);
+    formData.append('user_pwd', this.formGroup.get('password')?.value);
 
     this.authService.loginUser(formData).subscribe(
       response => {
         this.loading = false;
         if (response.success) {
           this.cu = this.authService.currentUser;
-          if (this.cu.data.isFirstConnection == 1) {
+          if (this.cu.data.user_isFirstConnection == 1) {
             this.router.navigate(['/admin/dashboard']);
           }
           else {
-            this.router.navigate(['/auth/change-password/' + this.cu.data.id]);
+            this.router.navigate(['/auth/change-password/' + this.cu.data.user_id]);
           }
         }
         else {

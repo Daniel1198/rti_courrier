@@ -60,10 +60,10 @@ export class ChangePasswordComponent implements OnInit {
   onSubmit() {
     const formData = new FormData();
 
-    formData.append('id', this.cu.data.id);
-    formData.append('password', this.formGroup.get('oldPassword')?.value);
-    formData.append('new_password', this.formGroup.get('newPassword')?.value);
-    formData.append('is_first_connection', '1');
+    formData.append('user_id', this.cu.data.user_id);
+    formData.append('user_password', this.formGroup.get('oldPassword')?.value);
+    formData.append('user_new_password', this.formGroup.get('newPassword')?.value);
+    formData.append('user_is_first_connection', '1');
 
     if (this.formGroup.get('confirmPassword')?.value == this.formGroup.get('newPassword')?.value) {
       this.userService.changePassword(formData).subscribe(

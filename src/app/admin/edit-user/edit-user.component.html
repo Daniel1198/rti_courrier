@@ -5,7 +5,7 @@
                 <li class="breadcrumb-item">
                     <a routerLink="/admin/settings">Administration</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">Nouvel utilisateur</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ id == 0 ? 'Nouvel utilisateur' : 'Modifier l\'utilisateur'}}</li>
             </ol>
         </nav>    
     </div>

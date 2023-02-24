@@ -24,7 +24,7 @@ export class UserService {
   }
 
   deleteUser(id: number): Observable<any> {
-    return this.http.get<any>(this.urlg + '/delete/user.php?id=' + id);
+    return this.http.get<any>(this.urlg + '/delete/user.php?user_id=' + id);
   }
 
   updateUser(user: any): Observable<any> {
@@ -32,7 +32,7 @@ export class UserService {
   }
 
   loadOneUser(id: number): Observable<any> {
-    return this.http.get<any>(this.urlg + '/read/one_user.php?id=' + id);
+    return this.http.get<any>(this.urlg + '/read/one_user.php?user_id=' + id);
   }
 
   changePassword(data: any): Observable<any> {

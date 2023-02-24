@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { faChartPie, faCog, faEnvelopesBulk, faFolderTree, faPencil, faPowerOff, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faChartPie, faCog, faEnvelopesBulk, faPencil, faPowerOff, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from 'src/app/services/auth.service';
 import { ConfigService } from 'src/app/services/config.service';
 

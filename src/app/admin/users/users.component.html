@@ -34,10 +34,10 @@
                 <div class="card w3-border-0 shadow-sm bg-light">
                     <div class="card-body shadow-sm d-flex justify-content-between align-items-start">
                         <div class="d-flex align-items-center">
-                            <img [src]="urlG + user.image" alt="" class="rounded-circle" style="width: 70px; height: 70px;">
+                            <img [src]="urlG + user.user_image" alt="" class="rounded-circle" style="width: 70px; height: 70px;">
                             <div class="ms-3">
-                                <p class="m-0 fw-bold" style="font-size: small;">{{ (user.lastname + ' ' + user.firstname) | titlecase }}</p>
-                                <small>{{ user.isadmin == 0 ? 'Utilisateur' : 'Administrateur' }}</small>
+                                <p class="m-0 fw-bold" style="font-size: small;">{{ (user.user_lastname + ' ' + user.user_firstname) | titlecase }}</p>
+                                <small>{{ user.user_isadmin == 0 ? 'Utilisateur' : 'Administrateur' }}</small>
                                 <!-- <small class="badge bg-danger d-block">Inactif</small> -->
                             </div>
                         </div>
@@ -47,12 +47,12 @@
                                 <fa-icon [icon]="faEllipsisVertical"></fa-icon>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><button class="dropdown-item" (click)="showProfile(user.id)">Voir le profil complet</button></li>
+                                <li><button class="dropdown-item" (click)="showProfile(user.user_id)">Voir le profil complet</button></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" [routerLink]="['/admin/settings/edit-user', user.id]">Editer le compte</a></li>
-                                <li><button class="dropdown-item" (click)="showPopPwdChange(user.id)">Changer le mot de passe</button></li>
+                                <li><a class="dropdown-item" [routerLink]="['/admin/settings/edit-user', user.user_id]">Editer le compte</a></li>
+                                <li><button class="dropdown-item" (click)="showPopPwdChange(user.user_id)">Changer le mot de passe</button></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><button class="dropdown-item" (click)="onDelete(user.id)">Supprimer le compte</button></li>
+                                <li><button class="dropdown-item" (click)="onDelete(user.user_id)">Supprimer le compte</button></li>
                                 <!-- <li><a class="dropdown-item" href="#">Désactiver le compte</a></li> -->
                             </ul>
                         </div>

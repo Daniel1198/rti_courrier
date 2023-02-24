@@ -67,10 +67,10 @@ export class UsersComponent implements OnInit {
         else {
           const formData = new FormData();
 
-          formData.append('id', id.toString());
-          formData.append('password', password);
-          formData.append('new_password', password);
-          formData.append('is_first_connection', '0');
+          formData.append('user_id', id.toString());
+          formData.append('user_password', password);
+          formData.append('user_new_password', password);
+          formData.append('user_is_first_connection', '0');
 
           this.userService.changePassword(formData).subscribe(
             response => {
@@ -107,7 +107,7 @@ export class UsersComponent implements OnInit {
   onSearch(search: string) {
     if (search) {
       this.users = this.data.filter(user => {
-        const name = user.lastname + ' ' + user.firstname;
+        const name = user.user_lastname + ' ' + user.user_firstname;
         return name.toLowerCase().includes(search.toLowerCase());
       });
     }
@@ -147,7 +147,7 @@ export class UsersComponent implements OnInit {
       response => {
         if (response.success) {
           Swal.fire({
-            imageUrl: this.urlG + response.results[0].image,
+            imageUrl: this.urlG + response.results[0].user_image,
             imageHeight: '100px',
             imageWidth: '100px',
             html: `
@@ -155,19 +155,19 @@ export class UsersComponent implements OnInit {
                 <h6 class="p-2 border border-info mb-3">Infos utilisateur</h6>
                 <div class="col-6 form-group mb-3">
                     <label for="" class="form-label fw-bold">Nom</label>
-                    <input type="text" class="form-control" readonly value="${response.results[0].lastname}">
+                    <input type="text" class="form-control" readonly value="${response.results[0].user_lastname}">
                 </div>
                 <div class="col-6 form-group mb-3">
                     <label for="" class="form-label fw-bold">Prénom(s)</label>
-                    <input type="text" class="form-control" readonly value="${response.results[0].firstname}">
+                    <input type="text" class="form-control" readonly value="${response.results[0].user_firstname}">
                 </div>
                 <div class="col-6 form-group mb-4">
                     <label for="" class="form-label fw-bold">Email</label>
-                    <input type="text" class="form-control" readonly value="${response.results[0].email}">
+                    <input type="text" class="form-control" readonly value="${response.results[0].user_email}">
                 </div>
                 <div class="col-6 form-group mb-4">
                     <label for="" class="form-label fw-bold">Rôle</label>
-                    <input type="text" class="form-control" readonly value="${response.results[0].isadmin == 0 ? 'Simple utilisateur' : 'Administrateur'}">
+                    <input type="text" class="form-control" readonly value="${response.results[0].user_isadmin == 0 ? 'Simple utilisateur' : 'Administrateur'}">
                 </div>
             </div>
             `,

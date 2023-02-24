@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
     
       if (localStorage.getItem('access_token')) {
         let cu:any = this.authService.currentUser;
-        if (cu.data.isFirstConnection == 1)
+        if (cu.data.user_isFirstConnection == 1)
           return true;
         return false;
       }
