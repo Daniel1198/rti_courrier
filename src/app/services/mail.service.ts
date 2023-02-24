@@ -19,7 +19,23 @@ export class MailService {
     return this.http.post(this.urlg + '/create/mail.php', mail);
   }
 
-  getAllMails(): Observable<any> {
-    return this.http.get<any>(this.urlg + '/read/mails.php');
+  changeMailRegister(mail: any): Observable<any> {
+    return this.http.post(this.urlg + '/update/change_mail_register.php', mail);
+  }
+
+  updateMail(mail: any): Observable<any> {
+    return this.http.post(this.urlg + '/update/mail.php', mail);
+  }
+
+  getMailsByRegister(idRegister: number): Observable<any> {
+    return this.http.get<any>(this.urlg + '/read/mails.php?id_register='+idRegister);
+  }
+
+  loadMail(idMail: number): Observable<any> {
+    return this.http.get<any>(this.urlg + '/read/one_mail.php?mail_id=' + idMail);
+  }
+
+  deleteMail(id: number): Observable<any> {
+    return this.http.get<any>(this.urlg + '/delete/mail.php?mail_id=' + id);
   }
 }

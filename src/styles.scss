@@ -2,6 +2,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Inter&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
 
+$colors: (
+    "white": rgba(255, 255, 255, 0.877),
+    "dark": rgba(24, 24, 24, 0.863),
+    "disabled": rgba(196, 196, 196, 0.904),
+    "green": rgba(62, 143, 62, 0.87),
+    "green-light": rgba(95, 253, 95, 0.87),
+    "blue": rgb(39, 113, 173),
+    "blue-light": rgba(94, 209, 255, 0.87),
+    "blue-grey": rgb(72, 94, 112),
+    "red": rgba(204, 66, 66, 0.87),
+    "orange": rgb(209, 118, 43),
+    "purple": rgba(182, 47, 235, 0.87),
+    "pink": rgba(235, 47, 204, 0.87)
+);
+
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -163,4 +178,26 @@ input[type="file"] {
   display: -webkit-box;    
   -webkit-line-clamp: 1;  
   -webkit-box-orient: vertical;
+}
+
+.message {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.3rem;
+    margin-bottom: 1rem;
+
+    &--success {
+        border-left: 2px solid map-get($map: $colors, $key: "green");
+        color: map-get($map: $colors, $key: "green");
+    }
+
+    &--error {
+        border-left: 2px solid map-get($map: $colors, $key: "red");
+        color: map-get($map: $colors, $key: "red");
+    }
+
+    &--warning {
+        border-left: 2px solid map-get($map: $colors, $key: "orange");
+        color: map-get($map: $colors, $key: "orange");
+    }
 }

@@ -24,49 +24,63 @@
                 </button>
             </div>
         </div>
-
+        <div class="text-center" *ngIf="loading">
+            <app-loader></app-loader>
+        </div>
+        <div class="message message--success bg-light w3-animate-opacity mt-3" *ngIf="success">
+            <i class="fa fa-close me-2"></i>
+            {{ message }}
+        </div>
         <div class="mt-3 w3-border p-3">
             <table class="table table-striped">
                 <thead class="thead-blue">
                     <tr>
                         <th>N°.</th>
                         <th>Date rcp.</th>
-                        <th>Date trs.</th>
+                        <th *ngIf="id == 2">Date trs.</th>
                         <th>Expéditeur.</th>
                         <th>Objet.</th>
                         <th>Service dest.</th>
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr *ngFor="let n of data | paginate : {
+                <tbody *ngIf="mails.length == 0">
+                    <tr>
+                        <td colspan="6" align="center">Aucune donnée trouvée.</td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="mails.length > 0">
+                    <tr *ngFor="let mail of mails | paginate : {
                         itemsPerPage: tableSize,
                         currentPage: page,
                         totalItems: count
                       };
                       let i = index">
-                        <td>045FG78</td>
-                        <td>18/04/2023</td>
-                        <td>20/05/2023</td>
-                        <td>Alexandre Henry</td>
-                        <td>Demande de stage</td>
-                        <td>Service stage et formation</td>
-                        <td class="d-flex justify-content-end">
-                            <button class="btn btn-outline-info btn-sm me-3">
+                        <td align="middle">{{ mail.mail_id }}</td>
+                        <td width="100">{{ mail.mail_date_received }}</td>
+                        <td width="100" *ngIf="id == 2">{{ mail.mail_shipping_date }}</td>
+                        <td class="w-25"><div class="text-overflow">{{ mail.mail_corresponding }}</div></td>
+                        <td class="w-25"><div class="text-overflow">{{ mail.mail_object }}</div></td>
+                        <td><div class="text-overflow">{{ mail.serv_label | titlecase }}</div></td>
+                        <td class="d-flex">
+                            <button class="btn btn-outline-info btn-sm me-3" data-bs-toggle="modal" data-bs-target="#showMoreInfo" (click)="getMail(mail)">
                                 <fa-icon [icon]="faEye"></fa-icon>
                             </button>
-                            <button class="btn btn-outline-success btn-sm me-3">
+                            <button class="btn btn-outline-success btn-sm me-3" *ngIf="id === 1" data-bs-toggle="modal" data-bs-target="#mailHandled" (click)="getIdMail(mail.mail_id)">
                                 <fa-icon [icon]="faCheck"></fa-icon>
                             </button>
-                            <button class="btn btn-outline-primary btn-sm">
+                            <button class="btn btn-outline-primary btn-sm me-3" *ngIf="id === 1" [routerLink]="['/admin/registry/edit-mail', mail.mail_id]">
                                 <fa-icon [icon]="faPencil"></fa-icon>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" *ngIf="currentUser.data.user_isAdmin == 1" (click)="onDelete(mail.mail_id)">
+                                <fa-icon [icon]="faTrash"></fa-icon>
                             </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <div class="px-2 d-flex justify-content-end align-items-center" style="font-size: smaller;" *ngIf="data.length > 0">
-                <p>Total : [ {{ data.length }} ]</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div class="px-2 d-flex justify-content-end align-items-center" style="font-size: smaller;" *ngIf="mails.length > 0">
+                <p>Total : [ {{ mails.length }} ]</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               
                 <div class="d-flex mr-3">
                   Enregistrements par page :&nbsp;&nbsp;
@@ -85,5 +99,100 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Confirm register changing -->
+<div class="modal fade" id="mailHandled" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <form class="modal-content" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <div class="modal-header bg-gradient text-danger text-center">
+          <h5 class="modal-title" id="staticBackdropLabel">Voulez-vous vraiment marquer ce courrier comme étant traité ? Si oui, renseigner les champs ci-dessous il fera partir du registre de départ.</h5>
+        </div>
+        <div class="modal-body">
+            <div class="message message--error bg-light w3-animate-opacity" *ngIf="error">
+                <i class="fa fa-close me-2"></i>
+                {{ message }}
+            </div>
+            <p class="text-center">Le champ marqué par <span class="text-danger">*</span> est obligatoire.</p>
+            <div class="form-group mb-3">
+                <label class="form-label">Date de transmission. <span class="text-danger fw-bold">*</span></label>
+                <input type="date" class="form-control w-100" formControlName="shippingDate">
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Annotation.</label>
+                <input type="text" class="form-control w-100" formControlName="annotation">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Imputation.</label>
+                <input type="text" class="form-control w-100" formControlName="imputation">
+            </div>
+            <div class="text-center" *ngIf="load">
+                <app-loader></app-loader>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Fermer</button>
+          <button type="submit" class="btn btn-sm btn-success" (click)="onSubmit()" [disabled]="formGroup.invalid">Enregistrer</button>
+        </div>
+    </form>
+    </div>
+</div>
+
+<!-- Show more informations on mail -->
+<div class="modal fade" id="showMoreInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <form class="modal-content" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <div class="modal-header bg-secondary fw-bold text-white">
+          <h5 class="modal-title" id="staticBackdropLabel">Plus d'informations</h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group mb-3 col-6">
+                    <input type="text" class="form-control w-100" [value]="mail ? 'N° '+mail.mail_id : ''" disabled>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-secondary w-100">
+                        Pièces jointes
+                    </button>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Correspondant.</label>
+                <input type="text" class="form-control w-100" [value]="mail ? mail.mail_corresponding : ''" disabled>
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Objet.</label>
+                <input type="text" class="form-control w-100" [value]="mail ? mail.mail_object : ''" disabled>
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Destinataire.</label>
+                <input type="text" class="form-control w-100" [value]="mail ? mail.serv_label : ''" disabled>
+            </div>
+            <div class="row">
+                <div class="form-group mb-3 col-6">
+                    <label class="form-label">Date de reception.</label>
+                    <input type="text" class="form-control w-100" [value]="mail ? mail.mail_date_received : ''" disabled>
+                </div>
+                <div class="form-group mb-3 col-6">
+                    <label class="form-label">Date de transmission.</label>
+                    <input type="text" class="form-control w-100" [value]="mail ? mail.mail_shipping_date : ''" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group mb-3 col-6">
+                    <label class="form-label">Annotation.</label>
+                    <input type="text" class="form-control w-100" [value]="mail ? mail.mail_annotation : ''" disabled>
+                </div>
+                <div class="form-group mb-3 col-6">
+                    <label class="form-label">Imputation.</label>
+                    <input type="text" class="form-control w-100" [value]="mail ? mail.mail_imputation : ''" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Fermer</button>
+        </div>
+    </form>
     </div>
 </div>

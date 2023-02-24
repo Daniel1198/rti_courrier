@@ -41,6 +41,7 @@ export class EditMailComponent implements OnInit {
     this.id = +this.route.snapshot.paramMap.get('id')!;
     this.initForm();
     this.getAllService();
+    this.loadMail();
   }
 
   initForm() {
@@ -49,9 +50,6 @@ export class EditMailComponent implements OnInit {
       corresponding: ['', Validators.required],
       object: ['', Validators.required],
       dateReceived: ['', Validators.required],
-      shippingDate: ['', this.id > 0 ? Validators.required : Validators.nullValidator],
-      imputation: [''],
-      annotation: [''],
       idService: ['', Validators.required]
     });
   }
@@ -65,9 +63,6 @@ export class EditMailComponent implements OnInit {
     formData.append('mail_corresponding', this.formGroup.get('corresponding')?.value);
     formData.append('mail_object', this.formGroup.get('object')?.value);
     formData.append('mail_date_received', this.formGroup.get('dateReceived')?.value);
-    formData.append('mail_shipping_date', this.formGroup.get('shippingDate')?.value);
-    formData.append('mail_imputation', this.formGroup.get('imputation')?.value);
-    formData.append('mail_annotation', this.formGroup.get('annotation')?.value);
     formData.append('id_service', service.serv_id);
     
     for (let i = 0; i < this.files.length; i++) {
@@ -95,7 +90,40 @@ export class EditMailComponent implements OnInit {
       );
     }
     else {
+      this.mailService.updateMail(formData).subscribe(
+        response => {
+          if (response.success) {
+            this.Toast.fire({
+              icon: 'success',
+              title: response.message
+            });
+            this.formGroup.reset();
+            this.files = [];
+          }
+          else {
+            this.Toast.fire({
+              icon: 'error',
+              title: response.message
+            })
+          }
+        }
+      );
+    }
+  }
 
+  loadMail() {
+    if (this.id > 0) {
+      this.mailService.loadMail(this.id).subscribe(
+        response => {
+          this.formGroup.patchValue({
+            id: this.id,
+            corresponding: response.results[0].mail_corresponding,
+            object: response.results[0].mail_object,
+            dateReceived: response.results[0].mail_date_received,
+            idService: response.results[0].serv_label
+          });
+        }
+      );
     }
   }
 
