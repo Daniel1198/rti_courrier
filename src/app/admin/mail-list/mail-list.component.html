@@ -12,7 +12,7 @@
     
     <div class="content mt-4">
         <div class="d-flex justify-content-between align-items-center">
-            <input type="search" placeholder="Tapez votre recherche..." class="w3-input w3-border w-50">
+            <input type="search" placeholder="Tapez votre recherche..." #search class="w3-input w3-border w-50" (keyup)="onSearch(search.value)">
             <div class="d-flex w-50 ms-5">
                 <button class="btn-green px-3" [routerLink]="['/admin/registry/edit-mail', 0]">
                     <fa-icon [icon]="faEnvelope"></fa-icon>&nbsp;
@@ -55,13 +55,14 @@
                         currentPage: page,
                         totalItems: count
                       };
-                      let i = index">
-                        <td align="middle">{{ mail.mail_id }}</td>
-                        <td width="100">{{ mail.mail_date_received }}</td>
-                        <td width="100" *ngIf="id == 2">{{ mail.mail_shipping_date }}</td>
-                        <td class="w-25"><div class="text-overflow">{{ mail.mail_corresponding }}</div></td>
+                      let i = index" 
+                      [ngStyle]="{'background-color': getTimeDifference(mail.mail_shipping_date) > 0 ? 'rgba(188, 255, 188, 0.87)' : getTimeDifference(mail.mail_shipping_date) == 0 ? 'rgba(255, 179, 179, 0.87)' : ''}">
+                        <td width="10">{{ mail.mail_id }}</td>
+                        <td width="100">{{ mail.mail_date_received}}</td>
+                        <td width="100" *ngIf="id == 2">{{ mail.mail_shipping_date  }}</td>
+                        <td width="200"><div class="text-overflow">{{ mail.mail_corresponding }}</div></td>
                         <td class="w-25"><div class="text-overflow">{{ mail.mail_object }}</div></td>
-                        <td><div class="text-overflow">{{ mail.serv_label | titlecase }}</div></td>
+                        <td class="w-25"><div class="text-overflow">{{ mail.serv_label | titlecase }}</div></td>
                         <td class="d-flex">
                             <button class="btn btn-outline-info btn-sm me-3" data-bs-toggle="modal" data-bs-target="#showMoreInfo" (click)="getMail(mail)">
                                 <fa-icon [icon]="faEye"></fa-icon>
@@ -152,7 +153,7 @@
                     <input type="text" class="form-control w-100" [value]="mail ? 'N° '+mail.mail_id : ''" disabled>
                 </div>
                 <div class="col-6">
-                    <button class="btn btn-secondary w-100">
+                    <button class="btn btn-secondary w-100" [routerLink]="['/admin/registry/show-attachments', mail ? mail.mail_id : '']" data-bs-dismiss="modal">
                         Pièces jointes
                     </button>
                 </div>

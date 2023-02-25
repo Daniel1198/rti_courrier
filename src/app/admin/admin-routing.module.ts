@@ -9,6 +9,7 @@ import { PanelComponent } from './panel/panel.component';
 import { RegistryPanelComponent } from './registry-panel/registry-panel.component';
 import { RegistryComponent } from './registry/registry.component';
 import { SearchMailComponent } from './search-mail/search-mail.component';
+import { ShowAttachmentsComponent } from './show-attachments/show-attachments.component';
 import { UsersComponent } from './users/users.component';
 
 const routes: Routes = [
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'registry', component: RegistryPanelComponent, children: [
         { path: '', component: RegistryComponent },
         { path: 'mail-list/:id', component: MailListComponent },
+        { path: 'show-attachments/:id', component: ShowAttachmentsComponent },
         { path: 'edit-mail/:id', component: EditMailComponent },
       ] },
       { path: 'search', component: SearchMailComponent },

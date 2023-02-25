@@ -18,6 +18,7 @@ import { EditUserComponent } from './edit-user/edit-user.component';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoaderModule } from '../loader/loader.module';
+import { ShowAttachmentsComponent } from './show-attachments/show-attachments.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { LoaderModule } from '../loader/loader.module';
     RegistryPanelComponent,
     RegistryComponent,
     UsersComponent,
-    EditUserComponent
+    EditUserComponent,
+    ShowAttachmentsComponent
   ],
   imports: [
     CommonModule,

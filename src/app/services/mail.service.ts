@@ -38,4 +38,8 @@ export class MailService {
   deleteMail(id: number): Observable<any> {
     return this.http.get<any>(this.urlg + '/delete/mail.php?mail_id=' + id);
   }
+
+  getMailAttachments(id: number): Observable<any> {
+    return this.http.get<any>(this.urlg + '/read/attachments_by_mail.php?mail_id=' + id);
+  }
 }

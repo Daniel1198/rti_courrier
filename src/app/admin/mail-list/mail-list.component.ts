@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faCheck, faEnvelope, faEye, faFileExport, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from 'src/app/services/auth.service';
+import { replaceAccent } from 'src/app/services/function';
 import { MailService } from 'src/app/services/mail.service';
 import { RegisterService } from 'src/app/services/register.service';
 import Swal from 'sweetalert2';
@@ -22,8 +23,8 @@ export class MailListComponent implements OnInit {
 
   page: number = 1;
   count: number = 0;
-  tableSize: number = 5;
-  tableSizes: any = [5, 10, 15, 20];
+  tableSize: number = 10;
+  tableSizes: any = [10, 15, 20];
 
   formGroup!: FormGroup;
   error: boolean = false;
@@ -31,6 +32,7 @@ export class MailListComponent implements OnInit {
   message: string = '';
   register: any;
   mails: any[] = [];
+  data: any[] = [];
   mail: any;
   id!: number;
   idMail!: number;
@@ -87,6 +89,7 @@ export class MailListComponent implements OnInit {
       response => {
         this.loading = false;
         this.mails = response.results;
+        this.data = response.results;
       }
     )
   }
@@ -125,6 +128,7 @@ export class MailListComponent implements OnInit {
   }
 
   getIdMail(id: number) {
+    this.load = false;
     this.idMail = id;
   }
 
@@ -160,6 +164,27 @@ export class MailListComponent implements OnInit {
           }
         }
       )
+  }
+
+  onSearch(value:string) {
+    if (value) {
+      this.mails = this.data.filter((mail: any) => {
+        return replaceAccent(mail.mail_corresponding).includes(replaceAccent(value)) ||
+               replaceAccent(mail.mail_object).includes(replaceAccent(value)) ||
+               replaceAccent(mail.serv_label).includes(replaceAccent(value))
+      });
+    }
+    else {
+      this.getMailsByRegister()
+      this.page = 1;
+    }
+  }
+
+  getTimeDifference(value: string): number {
+    const nowDate = new Date();
+    const date = new Date(value);
+    const dt = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate());
+    return date.getTime() - dt.getTime();
   }
 
   changeSize(value: string) {
