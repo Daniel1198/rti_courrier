@@ -14,33 +14,39 @@
             </div>
         </div>
         <div class="mt-1 w3-border p-2">
-            <input type="search" class="w3-border w3-input" placeholder="Tapez le numéro, l'objet, l'expéditeur du courrier...">
+            <input 
+            type="search" 
+            class="w3-border w3-input" 
+            placeholder="Rechercher selon le service, l'objet, l'expéditeur du courrier"
+            #search
+            (keyup)="onSearch(search.value)"
+            >
             <div class="d-flex">
                 <div class="form-group mt-2 w-50">
                     <label for="periode" class="txt-blue fw-bold form-label">Période</label>
                     <div class="d-flex align-items-center">
                         <label for="debut" class="fw-bold">Du</label>
-                        <input type="date" class="w3-input mx-3" id="debut">
+                        <input type="date" class="w3-input mx-3" id="debut" [(ngModel)]="initialDate" (change)="onSearch(search.value)">
                         <label for="fin" class="fw-bold">Au</label>
-                        <input type="date" class="w3-input mx-3" id="fin">
+                        <input type="date" class="w3-input mx-3" id="fin" [(ngModel)]="finalDate" (change)="onSearch(search.value)" [disabled]="!initialDate">
                     </div>
                 </div>
                 <div class="w-25 form-group mt-2">
-                    <label for="service" class="txt-blue fw-bold form-label">Service</label>
-                    <select class="w3-select w3-border" id="service">
-                        <option value="" disabled selected>--- Choisissez le service ---</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
+                    <label for="service" class="txt-blue fw-bold form-label">Etat</label>
+                    <select class="w3-select w3-border" id="service" [disabled]="regValue == '1'" [(ngModel)]="state" (change)="onSearch(search.value)">
+                        <option value="" selected>--- Tous les états ---</option>
+                        <option value="1">Transmis</option>
+                        <option value="2">Non transmis</option>
+                        <option value="3">Transmis aujourd'hui</option>
                       </select>
                 </div>
                 <div class="w-25 form-group mt-2 ms-3">
                     <label for="registre" class="txt-blue fw-bold form-label">Registre</label>
-                    <select class="w3-select w3-border" id="registre">
-                        <option value="" disabled selected>--- Choisissez le registre ---</option>
-                        <option value="1">Option 1</option>
-                        <option value="2">Option 2</option>
-                        <option value="3">Option 3</option>
+                    <select class="w3-select w3-border" id="registre" [(ngModel)]="regValue" (change)="onSearch(search.value)" [disabled]="[1,2,3].includes(+state)">
+                        <option value="" selected>--- Tous les régistres ---</option>  
+                        <option
+                        *ngFor="let register of registers"
+                         [value]="register.reg_id">{{ register.reg_label }}</option>
                       </select>
                 </div>
             </div>
@@ -48,16 +54,12 @@
 
         <div class="mt-3">
             <div class="ms-auto w-50 mb-2 d-flex justify-content-end">
-                <button class="btn-orange w-25">
-                    <fa-icon [icon]="faFileExport"></fa-icon>
-                    Exporter
-                </button>
                 <button class="btn-red w-25 ms-3">
                     <fa-icon [icon]="faPrint"></fa-icon>
                     Imprimer
                 </button>
             </div>
-            <div class="w3-border p-3">
+            <div class="mt-3 w3-border p-3">
                 <table class="table table-striped">
                     <thead class="thead-blue">
                         <tr>
@@ -67,37 +69,44 @@
                             <th>Expéditeur.</th>
                             <th>Objet.</th>
                             <th>Service dest.</th>
-                            <th>P-J.</th>
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngFor="let n of data | paginate : {
+                    <tbody *ngIf="mails.length == 0">
+                        <tr>
+                            <td colspan="7" align="center">Aucune donnée trouvée.</td>
+                        </tr>
+                    </tbody>
+                    <tbody *ngIf="mails.length > 0">
+                        <tr *ngFor="let mail of mails | paginate : {
                             itemsPerPage: tableSize,
                             currentPage: page,
                             totalItems: count
                           };
-                          let i = index">
-                            <td>045FG78</td>
-                            <td>18/04/2023</td>
-                            <td>20/05/2023</td>
-                            <td>Alexandre Henry</td>
-                            <td>Demande de stage</td>
-                            <td>Service stage et formation</td>
-                            <td><a href="#" class="txt-blue">Cliquez ici</a></td>
+                          let i = index" 
+                          [ngStyle]="{'background-color': mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) < 0 ? 'rgba(188, 255, 188, 0.87)' : mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) == 0 ? 'rgba(255, 179, 179, 0.87)' : ''}">
+                            <td width="10">{{ mail.mail_id }}</td>
+                            <td width="150">{{ mail.mail_date_received}}</td>
+                            <td width="150" class="{{ mail.mail_shipping_date ? '' : 'text-danger' }}">{{ mail.mail_shipping_date ? mail.mail_shipping_date : 'Non traité' }}</td>
+                            <td width="200"><div class="text-overflow">{{ mail.mail_corresponding }}</div></td>
+                            <td class="w-25"><div class="text-overflow">{{ mail.mail_object }}</div></td>
+                            <td class="w-25"><div class="text-overflow">{{ mail.serv_label | titlecase }}</div></td>
                             <td class="d-flex">
-                                <button class="btn-blue">
+                                <button class="btn btn-outline-info btn-sm me-3" data-bs-toggle="modal" data-bs-target="#showMoreInfo" (click)="getMail(mail)">
+                                    <fa-icon [icon]="faEye"></fa-icon>
+                                </button>
+                                <button class="btn btn-outline-primary btn-sm me-3" [routerLink]="['/admin/registry/edit-mail', mail.mail_id]">
                                     <fa-icon [icon]="faPencil"></fa-icon>
                                 </button>
-                                <button class="btn-red ms-2">
+                                <button class="btn btn-outline-danger btn-sm" *ngIf="currentUser.data.user_isAdmin == 1" (click)="onDelete(mail.mail_id)">
                                     <fa-icon [icon]="faTrash"></fa-icon>
                                 </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <div class="px-2 d-flex justify-content-end align-items-center" style="font-size: smaller;" *ngIf="data.length > 0">
-                    <p>Total : [ {{ data.length }} ]</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="px-2 d-flex justify-content-end align-items-center" style="font-size: smaller;" *ngIf="mails.length > 0">
+                    <p>Total : [ {{ mails.length }} ]</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   
                     <div class="d-flex mr-3">
                       Enregistrements par page :&nbsp;&nbsp;
@@ -115,13 +124,64 @@
                       </pagination-controls>
                     </div>
                 </div>
-
-                <!-- Afficher avant que l'utilisateur ne commence la saisie -->
-                <!-- <div class="m-auto text-center">
-                    <img src="assets/images/seo.png" alt="En attente de votre recherche..." class="img-fluid" width="100">
-                    <p>En attente de votre recherche...</p>
-                </div> -->
             </div>
         </div>
+    </div>
+</div>
+
+<div class="modal fade" id="showMoreInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <form class="modal-content">
+        <div class="modal-header bg-secondary fw-bold text-white">
+          <h5 class="modal-title" id="staticBackdropLabel">Plus d'informations</h5>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group mb-3 col-6">
+                    <input type="text" class="form-control w-100" [value]="mail ? 'N° '+mail.mail_id : ''" disabled>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-secondary w-100" [routerLink]="['/admin/registry/show-attachments', mail ? mail.mail_id : '']" data-bs-dismiss="modal">
+                        Pièces jointes
+                    </button>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Correspondant.</label>
+                <input type="text" class="form-control w-100" [value]="mail ? mail.mail_corresponding : ''" disabled>
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Objet.</label>
+                <input type="text" class="form-control w-100" [value]="mail ? mail.mail_object : ''" disabled>
+            </div>
+            <div class="form-group mb-3">
+                <label class="form-label">Destinataire.</label>
+                <input type="text" class="form-control w-100" [value]="mail ? mail.serv_label : ''" disabled>
+            </div>
+            <div class="row">
+                <div class="form-group mb-3 col-6">
+                    <label class="form-label">Date de reception.</label>
+                    <input type="text" class="form-control w-100" [value]="mail ? mail.mail_date_received : ''" disabled>
+                </div>
+                <div class="form-group mb-3 col-6">
+                    <label class="form-label">Date de transmission.</label>
+                    <input type="text" class="form-control w-100" [value]="mail ? mail.mail_shipping_date : ''" disabled>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group mb-3 col-6">
+                    <label class="form-label">Annotation.</label>
+                    <input type="text" class="form-control w-100" [value]="mail ? mail.mail_annotation : ''" disabled>
+                </div>
+                <div class="form-group mb-3 col-6">
+                    <label class="form-label">Imputation.</label>
+                    <input type="text" class="form-control w-100" [value]="mail ? mail.mail_imputation : ''" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Fermer</button>
+        </div>
+    </form>
     </div>
 </div>

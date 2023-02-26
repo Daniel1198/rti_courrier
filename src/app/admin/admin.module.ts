@@ -16,9 +16,10 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { UsersComponent } from './users/users.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { HighchartsChartModule } from 'highcharts-angular';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoaderModule } from '../loader/loader.module';
 import { ShowAttachmentsComponent } from './show-attachments/show-attachments.component';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,9 @@ import { ShowAttachmentsComponent } from './show-attachments/show-attachments.co
     NgxPaginationModule,
     HighchartsChartModule,
     ReactiveFormsModule,
+    FormsModule,
     LoaderModule,
+    PdfViewerModule,
     SweetAlert2Module.forRoot()
   ]
 })

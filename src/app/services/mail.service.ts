@@ -27,7 +27,7 @@ export class MailService {
     return this.http.post(this.urlg + '/update/mail.php', mail);
   }
 
-  getMailsByRegister(idRegister: number): Observable<any> {
+  getMailsByRegister(idRegister?: number): Observable<any> {
     return this.http.get<any>(this.urlg + '/read/mails.php?id_register='+idRegister);
   }
 

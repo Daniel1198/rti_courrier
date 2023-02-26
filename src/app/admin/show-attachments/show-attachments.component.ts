@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { faFileDownload } from '@fortawesome/free-solid-svg-icons';
 import { ConfigService } from 'src/app/services/config.service';
 import { MailService } from 'src/app/services/mail.service';
 
@@ -13,6 +14,7 @@ export class ShowAttachmentsComponent implements OnInit {
   id!: number;
   attachments: any[] = [];
   urlg: string = '';
+  faDownload = faFileDownload
 
   constructor(
     private route: ActivatedRoute,

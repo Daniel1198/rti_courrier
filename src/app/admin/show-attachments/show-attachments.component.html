@@ -10,10 +10,16 @@
         </nav>    
     </div>
 
-    <div class="content mt-4">
-        <a [href]="urlg + attachment.attach_file" *ngFor="let attachment of attachments">
-            {{ attachment.attach_label }}
-        </a>
+    <div class="content my-4 px-3">
+        <div *ngIf="attachments.length > 0">
+            <a [href]="urlg + attachment.attach_file" target="_blank" class="btn btn-secondary me-3" *ngFor="let attachment of attachments">
+                {{ attachment.attach_label | lowercase }}
+                <fa-icon [icon]="faDownload" class="ms-2"></fa-icon>
+            </a>
+        </div>
+        <div *ngIf="attachments.length == 0">
+            <p>Aucune pièce jointe trouvée.</p>
+        </div>
     </div>
 </div>
     

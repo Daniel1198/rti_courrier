@@ -56,7 +56,7 @@
                         totalItems: count
                       };
                       let i = index" 
-                      [ngStyle]="{'background-color': getTimeDifference(mail.mail_shipping_date) > 0 ? 'rgba(188, 255, 188, 0.87)' : getTimeDifference(mail.mail_shipping_date) == 0 ? 'rgba(255, 179, 179, 0.87)' : ''}">
+                      [ngStyle]="{'background-color': mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) < 0 ? 'rgba(188, 255, 188, 0.87)' : mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) == 0 ? 'rgba(255, 179, 179, 0.87)' : ''}">
                         <td width="10">{{ mail.mail_id }}</td>
                         <td width="100">{{ mail.mail_date_received}}</td>
                         <td width="100" *ngIf="id == 2">{{ mail.mail_shipping_date  }}</td>

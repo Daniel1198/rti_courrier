@@ -1,7 +1,7 @@
 export function replaceAccent(chaine: string): string {
     let charactersWithAccent: string = 'àâäçéèëêïîôöuüùû';
     let charactersWithoutAccent: string = 'aaaceeeeiioouuuu';
-    chaine = chaine.toLowerCase();
+    chaine = chaine.trim().toLowerCase();
     
     for (let i = 0; i < charactersWithAccent.length; i++) {
         for (let j = 0; j < chaine.length; j++) {
