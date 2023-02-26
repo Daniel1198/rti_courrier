@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MailService } from 'src/app/services/mail.service';
 import { ReceiverService } from 'src/app/services/receiver.service';
 import Swal from 'sweetalert2';
@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 export class EditMailComponent implements OnInit {
 
   services: any[] = []
-  files: File[] = [];
+  files: any[] = [];
   formGroup!: FormGroup;
   id!: number;
 
@@ -90,24 +90,34 @@ export class EditMailComponent implements OnInit {
       );
     }
     else {
-      this.mailService.updateMail(formData).subscribe(
-        response => {
-          if (response.success) {
-            this.Toast.fire({
-              icon: 'success',
-              title: response.message
-            });
-            this.formGroup.reset();
-            this.files = [];
-          }
-          else {
-            this.Toast.fire({
-              icon: 'error',
-              title: response.message
-            })
-          }
+      Swal.fire({
+        title: 'Voulez-vous vraiment enregistrer les modifications apportées à ce courrier ?',
+        showDenyButton: true,
+        confirmButtonText: 'Oui',
+        denyButtonText: `Non`,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          this.loading = true;
+          this.mailService.updateMail(formData).subscribe(
+            response => {
+              if (response.success) {
+                this.Toast.fire({
+                  icon: 'success',
+                  title: response.message
+                });
+                history.back();
+              }
+              else {
+                this.Toast.fire({
+                  icon: 'error',
+                  title: response.message
+                })
+              }
+            }
+          );
         }
-      );
+      })
     }
   }
 

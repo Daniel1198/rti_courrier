@@ -50,14 +50,14 @@
                     </div>
                 </div>
 
-                <div class="col-4 mt-3">
+                <div class="col-4 mt-3" *ngIf="id == 0">
                     <div class="form-group">
                         <label class="form-label">Ajouter une pièce jointe.</label>
                         <label for="pj" class="form-label btn-orange p-2 text-center" style="cursor: pointer;">Pièce jointe</label>
                         <input type="file" id="pj" multiple="multiple" (change)="onFileChange($event)">
                     </div>
                 </div>
-                <div class="mt-3 col-12 row">
+                <div class="mt-3 col-12 row" *ngIf="id == 0">
                     <div class="d-flex align-items-center py-1 w3-border-bottom mb-3">
                         <img src="assets/images/attached-file.png" alt="" class="me-3">
                         Vos pièces jointes
@@ -71,12 +71,12 @@
                         </button>
                     </div>
                 </div>
-                <div class="m-auto w-50 d-flex mt-4">
-                    <button type="button" (click)="onBack()" class="btn-red">
+                <div class="col-12 d-flex mt-4 justify-content-center">
+                    <button type="button" (click)="onBack()" class="btn-red w-25">
                         Retour
                     </button>
 
-                    <button type="submit" class="ms-3 {{ formGroup.invalid ? 'btn-invalid' : 'btn-green' }}" [disabled]="formGroup.invalid">
+                    <button type="submit" class="ms-3 w-25 {{ formGroup.invalid ? 'btn-invalid' : 'btn-green' }}" [disabled]="formGroup.invalid">
                         Enregistrer
                     </button>
                 </div>
