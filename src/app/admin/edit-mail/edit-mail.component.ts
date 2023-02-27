@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 import { MailService } from 'src/app/services/mail.service';
 import { ReceiverService } from 'src/app/services/receiver.service';
 import Swal from 'sweetalert2';
@@ -12,10 +13,10 @@ import Swal from 'sweetalert2';
 })
 export class EditMailComponent implements OnInit {
 
-  services: any[] = []
-  files: any[] = [];
+  directions: any[] = []
   formGroup!: FormGroup;
-  id!: number;
+  id!: string;
+  currentUser: any;
 
   loading: boolean = false;
   Toast = Swal.mixin({
@@ -34,42 +35,41 @@ export class EditMailComponent implements OnInit {
     private receiverService: ReceiverService,
     private mailService: MailService,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
-    this.id = +this.route.snapshot.paramMap.get('id')!;
+    this.currentUser = this.authService.currentUser;
+    this.id = this.route.snapshot.paramMap.get('id')!;
     this.initForm();
-    this.getAllService();
+    this.getAllDirection();
     this.loadMail();
   }
 
   initForm() {
     this.formGroup = this.formBuilder.group({
-      id: [''],
+      ref: [''],
       corresponding: ['', Validators.required],
       object: ['', Validators.required],
       dateReceived: ['', Validators.required],
-      idService: ['', Validators.required]
+      idDirection: ['', Validators.required]
     });
   }
 
   onSubmit() {
     const formData = new FormData();
 
-    const service = this.services.find((service: any) => service.serv_label == this.formGroup.get('idService')?.value)
+    const direction = this.directions.find((direction: any) => direction.dir_label == this.formGroup.get('idDirection')?.value)
 
-    formData.append('mail_id', this.formGroup.get('id')?.value);
+    formData.append('mail_ref', this.formGroup.get('ref')?.value);
     formData.append('mail_corresponding', this.formGroup.get('corresponding')?.value);
     formData.append('mail_object', this.formGroup.get('object')?.value);
     formData.append('mail_date_received', this.formGroup.get('dateReceived')?.value);
-    formData.append('id_service', service.serv_id);
-    
-    for (let i = 0; i < this.files.length; i++) {
-      formData.append('attachments[]', this.files[i]);
-    }
+    formData.append('id_direction', direction.dir_id);
+    formData.append('id_user', this.currentUser.data.user_id);
 
-    if (this.id === 0) {
+    if (this.id == "0") {
       this.mailService.newMail(formData).subscribe(
         response => {
           if (response.success) {
@@ -78,7 +78,6 @@ export class EditMailComponent implements OnInit {
               title: response.message
             });
             this.formGroup.reset();
-            this.files = [];
           }
           else {
             this.Toast.fire({
@@ -122,42 +121,30 @@ export class EditMailComponent implements OnInit {
   }
 
   loadMail() {
-    if (this.id > 0) {
+    if (this.id != "0") {
       this.mailService.loadMail(this.id).subscribe(
         response => {
           this.formGroup.patchValue({
-            id: this.id,
+            ref: this.id,
             corresponding: response.results[0].mail_corresponding,
             object: response.results[0].mail_object,
             dateReceived: response.results[0].mail_date_received,
-            idService: response.results[0].serv_label
+            idDirection: response.results[0].dir_label
           });
         }
       );
     }
   }
 
-  getAllService() {
+  getAllDirection() {
     this.receiverService.getAllReceiver().subscribe(
       response => {
-        this.services = response.results
+        this.directions = response.results
       }
     );
   }
 
   onBack() {
     history.back();
-  }
-
-  onFileChange(event: any) {
-    if (event.target.files.length > 0) {
-      for (let i = 0; i < event.target.files.length; i++) {
-        this.files.push(event.target.files[i]);
-      }
-    }
-  }
-
-  removeFile(index: number) {
-    this.files.splice(index, 1);
   }
 }

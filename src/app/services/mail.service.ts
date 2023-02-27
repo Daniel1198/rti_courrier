@@ -28,18 +28,18 @@ export class MailService {
   }
 
   getMailsByRegister(idRegister?: number): Observable<any> {
-    return this.http.get<any>(this.urlg + '/read/mails.php?id_register='+idRegister);
+    return this.http.get<any>(this.urlg + '/read/mails.php?id_register=' + idRegister);
   }
 
-  loadMail(idMail: number): Observable<any> {
-    return this.http.get<any>(this.urlg + '/read/one_mail.php?mail_id=' + idMail);
+  loadMail(mailRef: string): Observable<any> {
+    return this.http.get<any>(this.urlg + '/read/one_mail.php?mail_ref=' + mailRef);
   }
 
-  deleteMail(id: number): Observable<any> {
-    return this.http.get<any>(this.urlg + '/delete/mail.php?mail_id=' + id);
+  deleteMail(ref: string): Observable<any> {
+    return this.http.get<any>(this.urlg + '/delete/mail.php?mail_ref=' + ref);
   }
 
-  getMailAttachments(id: number): Observable<any> {
-    return this.http.get<any>(this.urlg + '/read/attachments_by_mail.php?mail_id=' + id);
+  getMailAttachments(ref: string): Observable<any> {
+    return this.http.get<any>(this.urlg + '/read/attachments_by_mail.php?mail_ref=' + ref);
   }
 }

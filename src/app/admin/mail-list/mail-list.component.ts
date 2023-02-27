@@ -27,6 +27,7 @@ export class MailListComponent implements OnInit {
   tableSizes: any = [10, 15, 20];
 
   formGroup!: FormGroup;
+  files: File[] = [];
   error: boolean = false;
   success: boolean = false;
   message: string = '';
@@ -35,7 +36,7 @@ export class MailListComponent implements OnInit {
   data: any[] = [];
   mail: any;
   id!: number;
-  idMail!: number;
+  idMail!: string;
   currentUser: any;
   loading: boolean = false;
   load: boolean = false;
@@ -94,7 +95,7 @@ export class MailListComponent implements OnInit {
     )
   }
 
-  onDelete(id: number) {
+  onDelete(id: string) {
     Swal.fire({
       title: 'Voulez-vous vraiment supprimer ce courrier ?',
       showDenyButton: true,
@@ -127,7 +128,7 @@ export class MailListComponent implements OnInit {
     })
   }
 
-  getIdMail(id: number) {
+  getIdMail(id: string) {
     this.load = false;
     this.idMail = id;
   }
@@ -140,10 +141,15 @@ export class MailListComponent implements OnInit {
     this.load = true;
     const formData = new FormData();
 
-    formData.append('mail_id', this.idMail.toString());
+    formData.append('mail_ref', this.idMail.toString());
     formData.append('mail_shipping_date', this.formGroup.get('shippingDate')?.value);
     formData.append('mail_annotation', this.formGroup.get('annotation')?.value);
     formData.append('mail_imputation', this.formGroup.get('imputation')?.value);
+    formData.append('mail_imputation', this.formGroup.get('imputation')?.value);
+
+    for (let i = 0; i < this.files.length; i++) {
+      formData.append('attachments[]', this.files[i]);
+    }
 
     this.mailService.changeMailRegister(formData).subscribe(
       response => {
@@ -154,8 +160,9 @@ export class MailListComponent implements OnInit {
             this.success = true;
             this.getMailsByRegister();
             this.formGroup.reset();
-            this.idMail = 0;
+            this.idMail = '';
             this.page = 1;
+            this.files = [];
           }
           else {
             this.error = true;
@@ -171,7 +178,8 @@ export class MailListComponent implements OnInit {
       this.mails = this.data.filter((mail: any) => {
         return replaceAccent(mail.mail_corresponding).includes(replaceAccent(value)) ||
                replaceAccent(mail.mail_object).includes(replaceAccent(value)) ||
-               replaceAccent(mail.serv_label).includes(replaceAccent(value))
+               replaceAccent(mail.dir_label).includes(replaceAccent(value)) ||
+               replaceAccent(mail.mail_ref).includes(replaceAccent(value))
       });
     }
     else {
@@ -185,6 +193,18 @@ export class MailListComponent implements OnInit {
     const date = new Date(value);
     const dt = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate());
     return date.getTime() - dt.getTime();
+  }
+
+  onFileChange(event: any) {
+    if (event.target.files.length > 0) {
+      for (let i = 0; i < event.target.files.length; i++) {
+        this.files.push(event.target.files[i]);
+      }
+    }
+  }
+
+  removeFile(index: number) {
+    this.files.splice(index, 1);
   }
 
   changeSize(value: string) {

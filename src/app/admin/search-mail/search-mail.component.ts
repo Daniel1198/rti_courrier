@@ -81,7 +81,8 @@ export class SearchMailComponent implements OnInit {
     this.mails = this.data.filter((mail: any) => {
       return replaceAccent(mail.mail_corresponding).includes(replaceAccent(value)) ||
              replaceAccent(mail.mail_object).includes(replaceAccent(value)) ||
-             replaceAccent(mail.serv_label).includes(replaceAccent(value))
+             replaceAccent(mail.dir_label).includes(replaceAccent(value)) ||
+             replaceAccent(mail.mail_ref).includes(replaceAccent(value))
     });
 
     if (this.regValue) {
@@ -123,7 +124,7 @@ export class SearchMailComponent implements OnInit {
     this.page = 1;
   }
 
-  onDelete(id: number) {
+  onDelete(id: string) {
     Swal.fire({
       title: 'Voulez-vous vraiment supprimer ce courrier ?',
       showDenyButton: true,

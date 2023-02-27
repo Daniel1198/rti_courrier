@@ -11,7 +11,7 @@ import { MailService } from 'src/app/services/mail.service';
 })
 export class ShowAttachmentsComponent implements OnInit {
 
-  id!: number;
+  id!: string;
   attachments: any[] = [];
   urlg: string = '';
   faDownload = faFileDownload
@@ -25,7 +25,7 @@ export class ShowAttachmentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = +this.route.snapshot.paramMap.get('id')!;
+    this.id = this.route.snapshot.paramMap.get('id')!;
     this.getAttachments();
   }
 

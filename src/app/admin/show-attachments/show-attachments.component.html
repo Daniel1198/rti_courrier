@@ -12,7 +12,7 @@
 
     <div class="content my-4 px-3">
         <div *ngIf="attachments.length > 0">
-            <a [href]="urlg + attachment.attach_file" target="_blank" class="btn btn-secondary me-3" *ngFor="let attachment of attachments">
+            <a [href]="urlg + attachment.attach_link" target="_blank" class="btn btn-secondary me-3" *ngFor="let attachment of attachments">
                 {{ attachment.attach_label | lowercase }}
                 <fa-icon [icon]="faDownload" class="ms-2"></fa-icon>
             </a>

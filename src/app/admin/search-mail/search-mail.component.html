@@ -68,7 +68,7 @@
                             <th>Date trs.</th>
                             <th>Expéditeur.</th>
                             <th>Objet.</th>
-                            <th>Service dest.</th>
+                            <th>Destinataire.</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -85,20 +85,20 @@
                           };
                           let i = index" 
                           [ngStyle]="{'background-color': mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) < 0 ? 'rgba(188, 255, 188, 0.87)' : mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) == 0 ? 'rgba(255, 179, 179, 0.87)' : ''}">
-                            <td width="10">{{ mail.mail_id }}</td>
+                            <td width="10">{{ mail.mail_ref }}</td>
                             <td width="150">{{ mail.mail_date_received}}</td>
                             <td width="150" class="{{ mail.mail_shipping_date ? '' : 'text-danger' }}">{{ mail.mail_shipping_date ? mail.mail_shipping_date : 'Non traité' }}</td>
                             <td width="200"><div class="text-overflow">{{ mail.mail_corresponding }}</div></td>
                             <td class="w-25"><div class="text-overflow">{{ mail.mail_object }}</div></td>
-                            <td class="w-25"><div class="text-overflow">{{ mail.serv_label | titlecase }}</div></td>
+                            <td class="w-25"><div class="text-overflow">{{ mail.dir_label | titlecase }}</div></td>
                             <td class="d-flex">
                                 <button class="btn btn-outline-info btn-sm me-3" data-bs-toggle="modal" data-bs-target="#showMoreInfo" (click)="getMail(mail)">
                                     <fa-icon [icon]="faEye"></fa-icon>
                                 </button>
-                                <button class="btn btn-outline-primary btn-sm me-3" *ngIf="mail.id_register == 1" [routerLink]="['/admin/registry/edit-mail', mail.mail_id]">
+                                <button class="btn btn-outline-primary btn-sm me-3" *ngIf="mail.id_register == 1" [routerLink]="['/admin/registry/edit-mail', mail.mail_ref]">
                                     <fa-icon [icon]="faPencil"></fa-icon>
                                 </button>
-                                <button class="btn btn-outline-danger btn-sm" *ngIf="currentUser.data.user_isAdmin == 1" (click)="onDelete(mail.mail_id)">
+                                <button class="btn btn-outline-danger btn-sm" *ngIf="currentUser.data.user_isAdmin == 1" (click)="onDelete(mail.mail_ref)">
                                     <fa-icon [icon]="faTrash"></fa-icon>
                                 </button>
                             </td>
@@ -138,10 +138,10 @@
         <div class="modal-body">
             <div class="row">
                 <div class="form-group mb-3 col-6">
-                    <input type="text" class="form-control w-100" [value]="mail ? 'N° '+mail.mail_id : ''" disabled>
+                    <input type="text" class="form-control w-100" [value]="mail ? 'N° '+mail.mail_ref : ''" disabled>
                 </div>
                 <div class="col-6">
-                    <button class="btn btn-secondary w-100" [routerLink]="['/admin/registry/show-attachments', mail ? mail.mail_id : '']" data-bs-dismiss="modal">
+                    <button class="btn btn-secondary w-100" [routerLink]="['/admin/registry/show-attachments', mail ? mail.mail_ref : '']" data-bs-dismiss="modal">
                         Pièces jointes
                     </button>
                 </div>
@@ -156,7 +156,7 @@
             </div>
             <div class="form-group mb-3">
                 <label class="form-label">Destinataire.</label>
-                <input type="text" class="form-control w-100" [value]="mail ? mail.serv_label : ''" disabled>
+                <input type="text" class="form-control w-100" [value]="mail ? mail.dir_label : ''" disabled>
             </div>
             <div class="row">
                 <div class="form-group mb-3 col-6">

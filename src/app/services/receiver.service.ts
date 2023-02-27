@@ -16,6 +16,6 @@ export class ReceiverService {
   ) { }
 
   getAllReceiver(): Observable<any> {
-    return this.http.get<any>(this.urlg + '/read/services.php');
+    return this.http.get<any>(this.urlg + '/read/directions.php');
   }
 }
