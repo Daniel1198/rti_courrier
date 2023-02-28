@@ -2,7 +2,7 @@
     <div class="header d-flex pb-2 w3-border-bottom align-items-center justify-content-between">
         <div>
             <h3><strong class="txt-blue m-0">Statistiques des courriers</strong></h3>
-            <small class="m-0">{{ 'du 09 au 13 Janvier' | uppercase }}</small>
+            <small class="m-0">{{ 'du 27 au 03 Janvier' | uppercase }}</small>
         </div>
 
         <div class="d-flex align-items-center">
@@ -29,7 +29,6 @@
     </div>
 
     <div class="p-3 row">
-        <div class="col-2"></div>
         <div class="col-2 p-2">
             <div class="rounded d-flex" style="height: 80px; background-color: rgb(239, 246, 255)">
                 <div class="d-flex px-3 align-items-center justify-content-between w-100">
@@ -38,7 +37,7 @@
                         <strong class="txt-blue">Total</strong>
                     </div>
                     <div class="col-4 d-flex align-items-center justify-content-end">
-                        <h4><strong style="opacity: .5; font-family: 'Roboto';">12</strong></h4>
+                        <h4><strong style="opacity: .5; font-family: 'Roboto';">{{ statistics ? statistics.total_mail : '' }}</strong></h4>
                     </div>
                 </div>
             </div>
@@ -52,13 +51,13 @@
                         <strong class="text-danger">En attente</strong>
                     </div>
                     <div class="col-4 d-flex align-items-center justify-content-end">
-                        <h4><strong style="opacity: .5; font-family: 'Roboto';">3</strong></h4>
+                        <h4><strong style="opacity: .5; font-family: 'Roboto';">{{ statistics ? statistics.mail_in_waiting : '' }}</strong></h4>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-2 p-2">
+        <!-- <div class="col-2 p-2">
             <div class="rounded d-flex" style="height: 80px; background-color: rgb(239, 255, 239)">
                 <div class="d-flex px-3 align-items-center justify-content-between w-100">
                     <div class="d-flex flex-column align-items-center justify-content-center">
@@ -70,7 +69,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="col-2 p-2">
             <div class="rounded d-flex" style="height: 80px; background-color: rgb(255, 251, 239)">
@@ -80,7 +79,7 @@
                         <strong class="text-warning">Courrier DG</strong>
                     </div>
                     <div class="col-4 d-flex align-items-center justify-content-end">
-                        <h4><strong style="opacity: .5; font-family: 'Roboto';">1</strong></h4>
+                        <h4><strong style="opacity: .5; font-family: 'Roboto';">{{ statistics ? statistics.mail_dg : '' }}</strong></h4>
                     </div>
                 </div>
             </div>
@@ -93,20 +92,20 @@
         <p class="fw-bold txt-blue"> &bull; Statistiques des courriers par nature de la demande</p>
         <table class="w-100">
             <tbody>
-                <tr *ngFor="let n of data | paginate : {
+                <tr *ngFor="let objectStatistics of statistics.total_by_object | paginate : {
                     itemsPerPage: tableSize,
                     currentPage: page,
                     totalItems: count
                   };
                   let i = index">
-                    <td class="w-25 fw-bold pb-3">Demande de couverture médiatique institutionnelle</td>
+                    <td class="w-25 fw-bold pb-3"><div class="text-overflow">{{ objectStatistics.mail_object }}</div></td>
                     <td class="w-50 px-5">
                         <div class="w-100 bg-light rounded" style="height: 5px;">
-                            <div class="h-100 bg-green rounded" [style.width]="300 + 'px'"></div>
+                            <div class="h-100 bg-green rounded" [style.width]="(objectStatistics.total/statistics.total_mail)*100 + '%'"></div>
                         </div>
                     </td>
-                    <td>11 traités</td>
-                    <td>2 en attente</td>
+                    <td style="font-style: italic;">{{ (objectStatistics.total/statistics.total_mail) * 100 | number: '1.2-2' }} %</td>
+                    <td>{{ objectStatistics.total }} courrier(s)</td>
                 </tr>
             </tbody>
         </table>
@@ -123,6 +122,11 @@
     </div>
 
     <div class="my-3">
+        <select class="form-select w-25 ms-auto mb-3">
+            <option
+            *ngFor="let year of years"
+             [value]="year">{{ year }}</option>
+        </select>
         <highcharts-chart
             [Highcharts] = "highcharts"
             [options]="chartOptions"
