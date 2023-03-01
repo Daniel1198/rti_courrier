@@ -92,7 +92,7 @@
         <p class="fw-bold txt-blue"> &bull; Statistiques des courriers par nature de la demande</p>
         <table class="w-100">
             <tbody>
-                <tr *ngFor="let objectStatistics of statistics.total_by_object | paginate : {
+                <tr *ngFor="let objectStatistics of statistics ? statistics.total_by_object : [] | paginate : {
                     itemsPerPage: tableSize,
                     currentPage: page,
                     totalItems: count
@@ -109,7 +109,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="px-5 d-flex justify-content-end align-items-center" style="font-size: smaller;" *ngIf="data.length > 0">
+        <div class="px-5 d-flex justify-content-end align-items-center" style="font-size: smaller;" *ngIf="statistics ? statistics.total_by_object.length > 0 : 0">
             <div class="d-flex justify-content-center">
               <pagination-controls
                 previousLabel="Précédent"
@@ -122,7 +122,7 @@
     </div>
 
     <div class="my-3">
-        <select class="form-select w-25 ms-auto mb-3">
+        <select class="form-select w-25 ms-auto mb-3" #year (change)="onGetStat(+year.value)">
             <option
             *ngFor="let year of years"
              [value]="year">{{ year }}</option>
