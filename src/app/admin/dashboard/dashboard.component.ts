@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faEnvelope, faFileExport, faMailBulk, faPause, faPrint, faUpRightFromSquare, faUserTie } from '@fortawesome/free-solid-svg-icons';
 import * as Highcharts from 'highcharts';
+import * as moment from 'moment';
 import { StatisticsService } from 'src/app/services/statistics.service';
 
 @Component({
@@ -25,7 +26,8 @@ export class DashboardComponent implements OnInit {
     data: any = [1, 2, 3, 4, 5, 6];
     statistics: any;
     years: number[] = [];
-
+    firstDayOfWeek!: Date;
+    lastDayOfWeek!: Date;
     highcharts = Highcharts;
     chartOptions!: Highcharts.Options;
 
@@ -34,7 +36,11 @@ export class DashboardComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.getStatistics();
+        this.firstDayOfWeek = moment().startOf('week').toDate();
+        this.lastDayOfWeek = moment().endOf('week').toDate();
+        const firstDate = this.firstDayOfWeek.getFullYear() + '-' + ((this.firstDayOfWeek.getMonth() + 1) > 9 ? ((+this.firstDayOfWeek.getMonth() + 1)) : '0' + (this.firstDayOfWeek.getMonth() + 1)) + '-' + (this.firstDayOfWeek.getDate() > 9 ? this.firstDayOfWeek.getDate() : '0' + this.firstDayOfWeek.getDate());
+        const lastDate = this.lastDayOfWeek.getFullYear() + '-' + ((this.lastDayOfWeek.getMonth() + 1) > 9 ? ((+this.lastDayOfWeek.getMonth() + 1)) : '0' + (this.lastDayOfWeek.getMonth() + 1)) + '-' + (this.lastDayOfWeek.getDate() > 9 ? this.lastDayOfWeek.getDate() : '0' + this.lastDayOfWeek.getDate());
+        this.getStatistics(firstDate, lastDate);
         const nowDate = new Date();
         for (let i = nowDate.getFullYear(); i >= 2020; i--) {
             this.years.push(i);
@@ -42,8 +48,8 @@ export class DashboardComponent implements OnInit {
         this.onGetStat(nowDate.getFullYear());
     }
 
-    getStatistics() {
-        this.statisticService.getStatisticByPeriod().subscribe(
+    getStatistics(firstDate: string, lastDate: string) {
+        this.statisticService.getStatisticByPeriod(firstDate, lastDate).subscribe(
             response => {
                 this.statistics = response.results;
             }

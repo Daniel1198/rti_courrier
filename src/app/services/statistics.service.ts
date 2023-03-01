@@ -14,8 +14,8 @@ export class StatisticsService {
     private http: HttpClient
   ) { }
 
-  getStatisticByPeriod(): Observable<any> {
-    return this.http.get<any>(this.urlg + '/read/statistics_by_period.php');
+  getStatisticByPeriod(firstDate: string, lastDate: string): Observable<any> {
+    return this.http.get<any>(this.urlg + '/read/statistics_by_period.php?first_date=' + firstDate + '&last_date=' + lastDate);
   }
 
   getStatisticByYear(year: number): Observable<any> {

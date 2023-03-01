@@ -2,14 +2,14 @@
     <div class="header d-flex pb-2 w3-border-bottom align-items-center justify-content-between">
         <div>
             <h3><strong class="txt-blue m-0">Statistiques des courriers</strong></h3>
-            <small class="m-0">{{ 'du 27 au 03 Janvier' | uppercase }}</small>
+            <small class="m-0">{{ ('du ' + (firstDayOfWeek | date: 'dd') + ' au ' + (lastDayOfWeek | date: 'dd') + ' ' + (lastDayOfWeek | date: 'MMMM')) | uppercase }}</small>
         </div>
 
         <div class="d-flex align-items-center">
             <label for="debut" class="me-3"><strong>DU</strong></label>
-            <input type="date" id="debut" class="w3-border w3-input">
+            <input type="date" id="debut" class="w3-border w3-input" #firstDate [value]="firstDayOfWeek | date: 'yyyy-MM-dd'" (change)="getStatistics(firstDate.value, lastDate.value)">
             <label for="fin" class="mx-3"><strong>AU</strong></label>
-            <input type="date" id="fin" class="w3-border w3-input">
+            <input type="date" id="fin" class="w3-border w3-input" #lastDate [value]="lastDayOfWeek | date: 'yyyy-MM-dd'" (change)="getStatistics(firstDate.value, lastDate.value)">
         </div>
 
         <div class="d-flex w-auto">
@@ -27,7 +27,6 @@
             </button>
         </div>
     </div>
-
     <div class="p-3 row">
         <div class="col-2 p-2">
             <div class="rounded d-flex" style="height: 80px; background-color: rgb(239, 246, 255)">
@@ -57,20 +56,6 @@
             </div>
         </div>
 
-        <!-- <div class="col-2 p-2">
-            <div class="rounded d-flex" style="height: 80px; background-color: rgb(239, 255, 239)">
-                <div class="d-flex px-3 align-items-center justify-content-between w-100">
-                    <div class="d-flex flex-column align-items-center justify-content-center">
-                        <h4 class="mb-1" style="opacity: .3;"><fa-icon [icon]="faUpRightFromSquare"></fa-icon></h4>
-                        <strong class="text-success">Externe</strong>
-                    </div>
-                    <div class="col-4 d-flex align-items-center justify-content-end">
-                        <h4><strong style="opacity: .5; font-family: 'Roboto';">6</strong></h4>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
         <div class="col-2 p-2">
             <div class="rounded d-flex" style="height: 80px; background-color: rgb(255, 251, 239)">
                 <div class="d-flex px-3 align-items-center justify-content-between w-100">
@@ -92,7 +77,7 @@
         <p class="fw-bold txt-blue"> &bull; Statistiques des courriers par nature de la demande</p>
         <table class="w-100">
             <tbody>
-                <tr *ngFor="let objectStatistics of statistics ? statistics.total_by_object : [] | paginate : {
+                <tr *ngFor="let objectStatistics of statistics.total_by_object | paginate : {
                     itemsPerPage: tableSize,
                     currentPage: page,
                     totalItems: count
