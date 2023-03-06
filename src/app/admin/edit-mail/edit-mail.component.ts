@@ -16,7 +16,6 @@ export class EditMailComponent implements OnInit {
   directions: any[] = []
   formGroup!: FormGroup;
   id!: string;
-  currentUser: any;
 
   loading: boolean = false;
   Toast = Swal.mixin({
@@ -40,7 +39,6 @@ export class EditMailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.currentUser = this.authService.currentUser;
     this.id = this.route.snapshot.paramMap.get('id')!;
     this.initForm();
     this.getAllDirection();
@@ -67,7 +65,6 @@ export class EditMailComponent implements OnInit {
     formData.append('mail_object', this.formGroup.get('object')?.value);
     formData.append('mail_date_received', this.formGroup.get('dateReceived')?.value);
     formData.append('id_direction', direction.dir_id);
-    formData.append('id_user', this.currentUser.data.user_id);
 
     if (this.id == "0") {
       this.mailService.newMail(formData).subscribe(

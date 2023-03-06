@@ -19,7 +19,6 @@ import { HighchartsChartModule } from 'highcharts-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoaderModule } from '../loader/loader.module';
 import { ShowAttachmentsComponent } from './show-attachments/show-attachments.component';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 import localeFr from '@angular/common/locales/fr';
 
 registerLocaleData(localeFr, 'fr');
@@ -47,7 +46,6 @@ registerLocaleData(localeFr, 'fr');
     ReactiveFormsModule,
     FormsModule,
     LoaderModule,
-    PdfViewerModule,
     SweetAlert2Module.forRoot()
   ],
   providers: [{provide: LOCALE_ID, useValue: 'fr-FR' }]
