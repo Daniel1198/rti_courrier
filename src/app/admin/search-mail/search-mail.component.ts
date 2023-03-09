@@ -5,6 +5,7 @@ import { replaceAccent } from 'src/app/services/function';
 import { MailService } from 'src/app/services/mail.service';
 import { RegisterService } from 'src/app/services/register.service';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-search-mail',
@@ -166,6 +167,29 @@ export class SearchMailComponent implements OnInit {
 
   getMail(mail: any) {
     this.mail = mail;
+  }
+
+  exportToExcel() {
+
+    let jsonData = [];
+    // Récupération des données filtrées 
+    for (let i = 0; i < this.mails.length; i++) {
+      jsonData[i] = {
+        Numéro: this.mails[i].mail_ref,
+        "Date de réception": this.mails[i].mail_date_received,
+        "Date de transmission": this.mails[i].mail_shipping_date,
+        Expéditeur: this.mails[i].mail_corresponding,
+        Objet: this.mails[i].mail_object,
+        Destinataire: this.mails[i].dir_label,
+      }
+    }
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(jsonData);
+
+    const book: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(book, worksheet, 'Sheet1');
+
+    XLSX.writeFile(book, 'resultat.xlsx');
   }
 
   changeSize(value: string) {

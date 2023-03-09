@@ -18,8 +18,8 @@
                 Nouveau courrier
             </button>
 
-            <button class="btn-orange ms-3 w-auto px-3">
-                <fa-icon [icon]="faFileExport"></fa-icon>
+            <button class="btn-orange ms-3 w-auto px-3" data-bs-toggle="modal" data-bs-target="#importModal">
+                <fa-icon [icon]="faFileImport"></fa-icon>
             </button>
 
             <button class="btn-red ms-3 w-auto px-3">
@@ -119,3 +119,84 @@
         </highcharts-chart>
     </div>
 </div>
+
+<div class="modal fade" tabindex="-1" id="importModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-green">
+          <h5 class="modal-title">Importation de données</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+          <div>
+            <div class="form-group">
+                <label for="file" class="form-label btn-orange p-2 text-center w-25" style="cursor: pointer;">Importer un fichier Excel</label>
+                <input type="file" id="file" accept=".xlsx" (change)="importFile($event)">
+            </div>
+
+            <div class="mt-3 w3-border p-3">
+                <table class="table table-striped">
+                    <thead class="thead-blue">
+                        <tr>
+                            <th>Date rcp.</th>
+                            <th>Date trs.</th>
+                            <th>Expéditeur.</th>
+                            <th>Objet.</th>
+                            <th>Destinataire.</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="mails.length == 0">
+                        <tr>
+                            <td colspan="6" align="center">Aucune donnée trouvée.</td>
+                        </tr>
+                    </tbody>
+                    <tbody *ngIf="mails.length > 0">
+                        <tr *ngFor="let mail of mails | paginate : {
+                            itemsPerPage: tableSize,
+                            currentPage: page,
+                            totalItems: count
+                          };
+                          let i = index">
+                            <td width="100">{{ mail["Date de réception"]}}</td>
+                            <td width="100">{{ mail["Date de transmission"] }}</td>
+                            <td width="200"><div class="text-overflow">{{ mail["Expéditeur"] }}</div></td>
+                            <td class="w-25"><div class="text-overflow">{{ mail.Objet }}</div></td>
+                            <td class="w-25"><div class="text-overflow">{{ mail.Destinataire | titlecase }}</div></td>
+                            <td class="d-flex">
+                                <button class="btn btn-outline-danger btn-sm">
+                                    <fa-icon [icon]="faTrash"></fa-icon>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="px-2 d-flex justify-content-end align-items-center" style="font-size: smaller;" *ngIf="mails.length > 0">
+                    <p>Total : [ {{ mails.length }} ]</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  
+                    <div class="d-flex mr-3">
+                      Enregistrements par page :&nbsp;&nbsp;
+                      <select id="items-per-page" #value class="mr-3 mb-3" (change)="changeSize(value.value)">
+                        <option *ngFor="let size of tableSizes" [value]="size">{{ size }}</option>
+                      </select>
+                    </div>
+                  
+                    <div class="d-flex justify-content-center">
+                      <pagination-controls
+                        previousLabel="Précédent"
+                        nextLabel="Suivant"
+                        (pageChange)="onTableDataChange($event)"
+                      >
+                      </pagination-controls>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-red w-25" data-bs-dismiss="modal">Fermer</button>
+          <button type="button" class="btn-green w-25">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>

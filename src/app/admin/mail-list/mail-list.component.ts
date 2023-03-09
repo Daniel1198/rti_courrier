@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { faCheck, faEnvelope, faEye, faFileExport, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faEnvelope, faEye, faFileExport, faFileImport, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from 'src/app/services/auth.service';
 import { replaceAccent } from 'src/app/services/function';
 import { MailService } from 'src/app/services/mail.service';
 import { RegisterService } from 'src/app/services/register.service';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-mail-list',
@@ -16,6 +17,7 @@ import Swal from 'sweetalert2';
 export class MailListComponent implements OnInit {
   faEnvelope = faEnvelope
   faFileExport = faFileExport
+  faFileImport = faFileImport
   faPencil = faPencil
   faCheck = faCheck
   faEye = faEye
@@ -40,6 +42,8 @@ export class MailListComponent implements OnInit {
   currentUser: any;
   loading: boolean = false;
   load: boolean = false;
+
+  @ViewChild('content') content!: ElementRef;
   Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -205,6 +209,33 @@ export class MailListComponent implements OnInit {
 
   removeFile(index: number) {
     this.files.splice(index, 1);
+  }
+
+  onPrint() {
+    
+  }
+
+  exportToExcel() {
+
+    let jsonData = [];
+    // Récupération des données filtrées 
+    for (let i = 0; i < this.mails.length; i++) {
+      jsonData[i] = {
+        Numéro: this.mails[i].mail_ref,
+        "Date de réception": this.mails[i].mail_date_received,
+        "Date de transmission": this.mails[i].mail_shipping_date,
+        Expéditeur: this.mails[i].mail_corresponding,
+        Objet: this.mails[i].mail_object,
+        Destinataire: this.mails[i].dir_label,
+      }
+    }
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(jsonData);
+
+    const book: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(book, worksheet, 'Sheet1');
+
+    XLSX.writeFile(book, 'resultat.xlsx');
   }
 
   changeSize(value: string) {

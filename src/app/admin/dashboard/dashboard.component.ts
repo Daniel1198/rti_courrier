@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { faEnvelope, faFileExport, faMailBulk, faPause, faPrint, faUpRightFromSquare, faUserTie } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faFileImport, faMailBulk, faPause, faPrint, faTrash, faUpRightFromSquare, faUserTie } from '@fortawesome/free-solid-svg-icons';
 import * as Highcharts from 'highcharts';
 import * as moment from 'moment';
 import { StatisticsService } from 'src/app/services/statistics.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,13 +11,14 @@ import { StatisticsService } from 'src/app/services/statistics.service';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-    faFileExport = faFileExport;
+    faFileImport = faFileImport;
     faPrint = faPrint;
     faEnvelope = faEnvelope;
     faMailBulk = faMailBulk;
-    faPause = faPause
-    faUpRightFromSquare = faUpRightFromSquare
-    faUserTie = faUserTie
+    faPause = faPause;
+    faUpRightFromSquare = faUpRightFromSquare;
+    faTrash = faTrash;
+    faUserTie = faUserTie;
 
     page: number = 1;
     count: number = 0;
@@ -24,6 +26,7 @@ export class DashboardComponent implements OnInit {
     tableSizes: any = [5, 10, 15, 20];
 
     data: any = [1, 2, 3, 4, 5, 6];
+    mails: any[] = [];
     statistics: any;
     years: number[] = [];
     firstDayOfWeek!: Date;
@@ -124,6 +127,20 @@ export class DashboardComponent implements OnInit {
         );
 
         
+    }
+
+    importFile(event: any) {
+        const file = event.target.files[0];
+
+        let fileReader = new FileReader();
+        fileReader.readAsBinaryString(file);
+
+        fileReader.onload = (e) => {
+            var workbook = XLSX.read(fileReader.result, { type: 'binary' });
+            var sheetNames = workbook.SheetNames;
+            this.mails = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNames[0]]);
+            console.log(this.mails);
+        }   
     }
 
     changeSize(value: string) {
