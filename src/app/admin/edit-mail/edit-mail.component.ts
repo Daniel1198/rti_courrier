@@ -57,6 +57,7 @@ export class EditMailComponent implements OnInit {
 
   onSubmit() {
     const formData = new FormData();
+    const cu:any = this.authService.currentUser;
 
     const direction = this.directions.find((direction: any) => direction.dir_label == this.formGroup.get('idDirection')?.value)
 
@@ -65,6 +66,7 @@ export class EditMailComponent implements OnInit {
     formData.append('mail_object', this.formGroup.get('object')?.value);
     formData.append('mail_date_received', this.formGroup.get('dateReceived')?.value);
     formData.append('id_direction', direction.dir_id);
+    formData.append('id_user', cu.data.user_id);
 
     if (this.id == "0") {
       this.mailService.newMail(formData).subscribe(

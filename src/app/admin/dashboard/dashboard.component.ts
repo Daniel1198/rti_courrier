@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { faCheck, faEnvelope, faFileImport, faMailBulk, faPause, faPrint, faTrash, faUpRightFromSquare, faUserTie } from '@fortawesome/free-solid-svg-icons';
 import * as Highcharts from 'highcharts';
+import jsPDF from 'jspdf';
 import * as moment from 'moment';
+import { AuthService } from 'src/app/services/auth.service';
 import { ConfigService } from 'src/app/services/config.service';
 import { MailService } from 'src/app/services/mail.service';
 import { ReceiverService } from 'src/app/services/receiver.service';
@@ -58,7 +60,8 @@ export class DashboardComponent implements OnInit {
         private statisticService: StatisticsService,
         private receiverService: ReceiverService,
         private mailService: MailService,
-        private configService: ConfigService
+        private configService: ConfigService,
+        private authService: AuthService,
 
     ) {
         this.exempleLink = this.configService.urlg + this.exempleLink;
@@ -181,6 +184,7 @@ export class DashboardComponent implements OnInit {
         for (let i = 0; i < this.mails.length ;i++) {
             this.loading[i] = true;
             const formData = new FormData();
+            const cu:any = this.authService.currentUser;
     
             const direction = this.directions.find((direction: any) => direction.dir_label == this.mails[i]["Destinataire"])
         
@@ -189,6 +193,8 @@ export class DashboardComponent implements OnInit {
             formData.append('mail_object', this.mails[i]["Objet"]);
             formData.append('mail_date_received', this.mails[i]["Date de réception"]);
             formData.append('id_direction', direction.dir_id);
+            formData.append('id_user', cu.data.user_id);
+
             
             this.mailService.newMail(formData).subscribe(
                 response => {
@@ -210,6 +216,69 @@ export class DashboardComponent implements OnInit {
     deleteMail(index: number) {
         this.mails.splice(index, 1);
     }
+
+    onPrint() {
+        const doc = new jsPDF({
+          orientation: "l"
+        });
+        const width = doc.getLineWidth();
+    
+        // Configuration du titre du fichier
+        doc.setDrawColor(0)
+        doc.setFillColor(196, 255 , 214)
+        doc.rect(30, 10, 240, 10, "F");
+        doc.setFont("courier", "bold");
+        doc.setFontSize(16);
+        doc.text("Résultats de recherche".toUpperCase(), 110, 17);
+    
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text("Mot clé de la recherche : ", 30, 30);
+        doc.setFont("courier", "italic");
+    
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text("Période : ", 30, 35);
+        doc.setFont("courier", "italic");
+    
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        doc.text("Etat : ", 30, 40);
+        doc.setFont("courier", "italic");
+    
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+    
+        // configuration de l'entête du tableau
+        doc.setDrawColor(0)
+        doc.setFillColor(255, 251 , 222)
+        doc.rect(10, 50, 275, 10, "F");
+        doc.cell(10, 50, 25, 10, "Numéro", 1, "left");
+        doc.cell(40, 50, 25, 10, "Date rcp.", 1, "left");
+        doc.cell(70, 50, 25, 10, "Date trs.", 1, "left");
+        doc.cell(100, 50, 50, 10, "Expéditeur.", 1, "left");
+        doc.cell(155, 50, 80, 10, "Objet.", 1, "left");
+        doc.cell(240, 50, 70, 10, "Destinataire.", 1, "left");
+    
+        let ln = 1;
+        // remplissage du tableau
+        for (let i = 0; i < this.mails.length; i++) {
+          doc.text(this.mails[i].mail_ref, 12, 66 * ln);
+          doc.text(this.mails[i].mail_date_received, 39, 66 * ln);
+          doc.text(this.mails[i].mail_shipping_date, 64, 66 * ln);
+          doc.text(this.mails[i].mail_corresponding, 88, 66 * ln);
+          doc.text(this.mails[i].mail_object, 136, 66 * ln);
+          doc.text(this.mails[i].dir_label, 218, 66 * ln);
+          doc.line(10, 70 * ln, 285, 70 * ln);
+          ln += 5;
+        }
+    
+        // ouverture du fichier à imprimer dans un nouvel onglet
+        const pdfBytes = doc.output('arraybuffer');
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const fileUrl = URL.createObjectURL(blob);
+        window.open(fileUrl);
+      }
 
     changeSize(value: string) {
         this.tableSize = +value;

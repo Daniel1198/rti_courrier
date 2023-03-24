@@ -211,10 +211,6 @@ export class MailListComponent implements OnInit {
     this.files.splice(index, 1);
   }
 
-  onPrint() {
-    
-  }
-
   exportToExcel() {
 
     let jsonData = [];

@@ -37,7 +37,6 @@
                         <option value="" selected>--- Tous les états ---</option>
                         <option value="1">Transmis</option>
                         <option value="2">Non transmis</option>
-                        <option value="3">Transmis aujourd'hui</option>
                       </select>
                 </div>
                 <div class="w-25 form-group mt-2 ms-3">
@@ -58,10 +57,10 @@
                     <fa-icon [icon]="faFileExport"></fa-icon>
                     Exporter
                 </button>
-                <button class="btn-red w-25 ms-3">
+                <!-- <button class="btn-red w-25 ms-3" (click)="onPrint(search.value)">
                     <fa-icon [icon]="faPrint"></fa-icon>
                     Imprimer
-                </button>
+                </button> -->
             </div>
             <div class="mt-3 w3-border p-3">
                 <table class="table table-striped">

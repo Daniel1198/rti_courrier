@@ -58,26 +58,26 @@
 
             <div class="mt-2">
                 <ul>
-                    <li routerLinkActive="active shadow">
-                        <a routerLink="/admin/dashboard">
+                    <li routerLink="/admin/dashboard" routerLinkActive="active shadow">
+                        <a>
                             <fa-icon [icon]="faChartPie" class="me-3"></fa-icon>
                             Tableau de bord
                         </a>
                     </li>
-                    <li routerLinkActive="active shadow">
-                        <a routerLink="/admin/registry">
+                    <li routerLink="/admin/registry" routerLinkActive="active shadow">
+                        <a>
                             <fa-icon [icon]="faEnvelopesBulk" class="me-3"></fa-icon>
                             Courriers
                         </a>
                     </li>
-                    <li routerLinkActive="active shadow">
-                        <a routerLink="/admin/search">
+                    <li routerLink="/admin/search" routerLinkActive="active shadow">
+                        <a>
                             <fa-icon [icon]="faSearch" class="me-3"></fa-icon>
                             Recherche
                         </a>
                     </li>
-                    <li routerLinkActive="active shadow" *ngIf="currentUser.data.user_isAdmin == 1">
-                        <a routerLink="/admin/settings">
+                    <li routerLink="/admin/settings" routerLinkActive="active shadow" *ngIf="currentUser.data.user_isAdmin == 1">
+                        <a>
                             <fa-icon [icon]="faCog" class="me-3"></fa-icon>
                             Administration
                         </a>

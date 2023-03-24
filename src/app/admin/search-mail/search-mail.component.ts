@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faEye, faFileExport, faPencil, faPrint, faTrash } from '@fortawesome/free-solid-svg-icons';
+import jsPDF from 'jspdf';
 import { AuthService } from 'src/app/services/auth.service';
 import { replaceAccent } from 'src/app/services/function';
 import { MailService } from 'src/app/services/mail.service';
@@ -176,18 +177,23 @@ export class SearchMailComponent implements OnInit {
     for (let i = 0; i < this.mails.length; i++) {
       jsonData[i] = {
         Numéro: this.mails[i].mail_ref,
-        "Date de réception": this.mails[i].mail_date_received,
-        "Date de transmission": this.mails[i].mail_shipping_date,
         Expéditeur: this.mails[i].mail_corresponding,
         Objet: this.mails[i].mail_object,
         Destinataire: this.mails[i].dir_label,
+        Annotation: this.mails[i].mail_annotation,
+        Imputation: this.mails[i].mail_imputation,
+        "Date de réception": this.mails[i].mail_date_received,
+        "Date de transmission": this.mails[i].mail_shipping_date,
       }
     }
 
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(jsonData);
+    const worksheet = XLSX.utils.json_to_sheet(jsonData, {
+      cellStyles: true
+    });
+    worksheet['A1'].s = { fill: { fgColor: { rgb: '0000FF' } }, font: { color: { rgb: 'FFFFFF' } } };
 
-    const book: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(book, worksheet, 'Sheet1');
+    const book = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(book, worksheet, 'Feuille1');
 
     XLSX.writeFile(book, 'resultat.xlsx');
   }
