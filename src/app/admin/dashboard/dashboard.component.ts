@@ -10,6 +10,7 @@ import { ReceiverService } from 'src/app/services/receiver.service';
 import { StatisticsService } from 'src/app/services/statistics.service';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-dashboard',
@@ -217,61 +218,70 @@ export class DashboardComponent implements OnInit {
         this.mails.splice(index, 1);
     }
 
-    onPrint() {
-        const doc = new jsPDF({
-          orientation: "l"
-        });
-        const width = doc.getLineWidth();
-    
-        // Configuration du titre du fichier
-        doc.setDrawColor(0)
-        doc.setFillColor(196, 255 , 214)
-        doc.rect(30, 10, 240, 10, "F");
-        doc.setFont("courier", "bold");
-        doc.setFontSize(16);
-        doc.text("Résultats de recherche".toUpperCase(), 110, 17);
-    
-        doc.setFont("helvetica", "normal");
+    onPrint(dateDeb: string, dateFin: string) {
+        const doc = new jsPDF();
+        const date = new Date();
+
+        // Configuration de l'entête de la page
+        doc.addImage('assets/icon.png', 'png', 10, 10, 10, 6);
+        doc.setFontSize(7);
+        doc.setFont('helvetica');
+        doc.text('Radiodiffusion Télévision Ivoirienne', 22, 14);
+        doc.text(date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear(), 188, 14);
+        doc.line(10, 19, 200, 19);
+
+        // Configuration du titre de la page
+        doc.setFontSize(15);
+        doc.setFont('helvetica', 'bold');
+        doc.text('STATISTIQUES DU ' + dateDeb + ' AU ' + dateFin, 50, 33);
+
+        // Données à afficher
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        doc.text('NOMBRE TOTAL DE COURRIERS : ..................', 13, 42);
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(255, 102, 102);
+        doc.text(this.statistics.total_mail, 73, 42);
+
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        doc.text('COURRIERS EN ATTENTE : ....................', 13, 48);
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(255, 102, 102);
+        doc.text(this.statistics.mail_in_waiting, 65, 48);
+
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        doc.text('COURRIERS DIRECTION GENERALE : ..................', 13, 54);
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(255, 102, 102);
+        doc.text(this.statistics.mail_dg, 78, 54);
+
+        doc.setTextColor(0, 128, 255);
         doc.setFontSize(10);
-        doc.text("Mot clé de la recherche : ", 30, 30);
-        doc.setFont("courier", "italic");
-    
-        doc.setFont("helvetica", "normal");
+        doc.setFont('helvetica', 'bolditalic');
+        doc.text('-- Statistiques des courriers par demande de la nature', 18, 65);
+        
+        doc.setTextColor(0, 0, 0);
         doc.setFontSize(10);
-        doc.text("Période : ", 30, 35);
-        doc.setFont("courier", "italic");
-    
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        doc.text("Etat : ", 30, 40);
-        doc.setFont("courier", "italic");
-    
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-    
-        // configuration de l'entête du tableau
-        doc.setDrawColor(0)
-        doc.setFillColor(255, 251 , 222)
-        doc.rect(10, 50, 275, 10, "F");
-        doc.cell(10, 50, 25, 10, "Numéro", 1, "left");
-        doc.cell(40, 50, 25, 10, "Date rcp.", 1, "left");
-        doc.cell(70, 50, 25, 10, "Date trs.", 1, "left");
-        doc.cell(100, 50, 50, 10, "Expéditeur.", 1, "left");
-        doc.cell(155, 50, 80, 10, "Objet.", 1, "left");
-        doc.cell(240, 50, 70, 10, "Destinataire.", 1, "left");
-    
-        let ln = 1;
-        // remplissage du tableau
-        for (let i = 0; i < this.mails.length; i++) {
-          doc.text(this.mails[i].mail_ref, 12, 66 * ln);
-          doc.text(this.mails[i].mail_date_received, 39, 66 * ln);
-          doc.text(this.mails[i].mail_shipping_date, 64, 66 * ln);
-          doc.text(this.mails[i].mail_corresponding, 88, 66 * ln);
-          doc.text(this.mails[i].mail_object, 136, 66 * ln);
-          doc.text(this.mails[i].dir_label, 218, 66 * ln);
-          doc.line(10, 70 * ln, 285, 70 * ln);
-          ln += 5;
+        for (let i = 0; i < this.statistics.total_by_object.length; i++) {
+            doc.setFont('courier', 'normal');
+            doc.text(this.statistics.total_by_object[i].mail_object, 13, 75 + (7*i));
+            doc.setFont('helvetica', 'bold');
+            doc.text(this.statistics.total_by_object[i].total, 192, 75 + (7*i));
+            doc.setDrawColor(204, 204, 204);
+            doc.setLineWidth(0.03);
+            doc.line(13, 75 + (7*i), 190, 75 + (7*i));
         }
+
+        html2canvas(document.getElementById("chart") as HTMLElement).then((canvas) => {
+            doc.addImage(canvas.toDataURL("image/PNG"), 'png', 13, 75 + (5 * this.statistics.total_by_object.length), 190, 200)
+        })
     
         // ouverture du fichier à imprimer dans un nouvel onglet
         const pdfBytes = doc.output('arraybuffer');

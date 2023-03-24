@@ -22,7 +22,7 @@
                 <fa-icon [icon]="faFileImport"></fa-icon>
             </button>
 
-            <button class="btn-red ms-3 w-auto px-3" (click)="onPrint()">
+            <button class="btn-red ms-3 w-auto px-3" (click)="onPrint(firstDate.value, lastDate.value)">
                 <fa-icon [icon]="faPrint"></fa-icon>
             </button>
         </div>
@@ -77,12 +77,7 @@
         <p class="fw-bold txt-blue"> &bull; Statistiques des courriers par nature de la demande</p>
         <table class="w-100">
             <tbody>
-                <tr *ngFor="let objectStatistics of statistics.total_by_object | paginate : {
-                    itemsPerPage: tableSize,
-                    currentPage: page,
-                    totalItems: count
-                  };
-                  let i = index">
+                <tr *ngFor="let objectStatistics of statistics.total_by_object">
                     <td class="w-25 fw-bold pb-3"><div class="text-overflow">{{ objectStatistics.mail_object }}</div></td>
                     <td class="w-50 px-5">
                         <div class="w-100 bg-light rounded" style="height: 5px;">
@@ -94,16 +89,6 @@
                 </tr>
             </tbody>
         </table>
-        <div class="px-5 d-flex justify-content-end align-items-center" style="font-size: smaller;" *ngIf="statistics ? statistics.total_by_object.length > 0 : 0">
-            <div class="d-flex justify-content-center">
-              <pagination-controls
-                previousLabel="Précédent"
-                nextLabel="Suivant"
-                (pageChange)="onTableDataChange($event)"
-              >
-              </pagination-controls>
-            </div>
-        </div>
     </div>
 
     <div class="my-3">
@@ -113,6 +98,7 @@
              [value]="year">{{ year }}</option>
         </select>
         <highcharts-chart
+            id="chart"
             [Highcharts] = "highcharts"
             [options]="chartOptions"
             style = "width: 100%; height: 400px; display: block;">
