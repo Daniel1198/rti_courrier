@@ -29,6 +29,14 @@ $colors: (
     font-family: 'Inter';
 }
 
+body {
+    filter: blur(0.3px);
+    background: linear-gradient(rgb(255, 255, 255), rgb(255, 255, 255)), url('assets/images/background.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+}
+
 .breadcrumb {
     font-weight: bold;
 }

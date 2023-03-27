@@ -226,7 +226,7 @@ export class DashboardComponent implements OnInit {
         doc.addImage('assets/icon.png', 'png', 10, 10, 10, 6);
         doc.setFontSize(7);
         doc.setFont('helvetica');
-        doc.text('Radiodiffusion Télévision Ivoirienne', 22, 14);
+        doc.text('SG2 COURRIER', 22, 14);
         doc.text(date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear(), 188, 14);
         doc.line(10, 19, 200, 19);
 
