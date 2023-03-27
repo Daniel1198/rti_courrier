@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { MailService } from 'src/app/services/mail.service';
+import { ObjectService } from 'src/app/services/object.service';
 import { ReceiverService } from 'src/app/services/receiver.service';
 import Swal from 'sweetalert2';
 
@@ -14,6 +15,7 @@ import Swal from 'sweetalert2';
 export class EditMailComponent implements OnInit {
 
   directions: any[] = []
+  objects: any[] = []
   formGroup!: FormGroup;
   id!: string;
 
@@ -36,6 +38,7 @@ export class EditMailComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private authService: AuthService,
+    private objectService: ObjectService
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +46,15 @@ export class EditMailComponent implements OnInit {
     this.initForm();
     this.getAllDirection();
     this.loadMail();
+    this.getObjects();
+  }
+
+  getObjects() {
+    this.objectService.getObjects().subscribe(
+      response => {
+        this.objects = response.results
+      }
+    );
   }
 
   initForm() {

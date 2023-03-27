@@ -35,7 +35,12 @@
                 <div class="col-6 mt-3">
                     <div class="form-group">
                         <label for="objet" class="form-label">Objet. <span class="text-danger">*</span></label>
-                        <input type="text" class="w3-border w3-input" id="objet" formControlName="object">
+                        <input type="text" class="w3-border w3-input" id="objet" formControlName="object" list="object">
+                        <datalist id="object">
+                            <option 
+                            *ngFor="let object of objects"
+                            [value]="object.mail_object">{{ object.mail_object }}</option>
+                        </datalist>
                     </div>
                 </div>
                 <div class="col-6 mt-3">
