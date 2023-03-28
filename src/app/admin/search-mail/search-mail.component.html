@@ -16,7 +16,7 @@
         <div class="mt-1 w3-border p-2">
             <input 
             type="search" 
-            class="w3-border w3-input" 
+            class="w3-border w3-input bg-transparent" 
             placeholder="Rechercher selon le service, l'objet, l'expéditeur du courrier"
             #search
             (keyup)="onSearch(search.value)"
@@ -26,14 +26,14 @@
                     <label for="periode" class="txt-blue fw-bold form-label">Période</label>
                     <div class="d-flex align-items-center">
                         <label for="debut" class="fw-bold">Du</label>
-                        <input type="date" class="w3-input mx-3" id="debut" [(ngModel)]="initialDate" (change)="onSearch(search.value)">
+                        <input type="date" class="w3-input mx-3 bg-transparent" id="debut" [(ngModel)]="initialDate" (change)="onSearch(search.value)">
                         <label for="fin" class="fw-bold">Au</label>
-                        <input type="date" class="w3-input mx-3" id="fin" [(ngModel)]="finalDate" (change)="onSearch(search.value)" [disabled]="!initialDate">
+                        <input type="date" class="w3-input mx-3 bg-transparent" id="fin" [(ngModel)]="finalDate" (change)="onSearch(search.value)" [disabled]="!initialDate">
                     </div>
                 </div>
                 <div class="w-25 form-group mt-2">
                     <label for="service" class="txt-blue fw-bold form-label">Etat</label>
-                    <select class="w3-select w3-border" id="service" [disabled]="regValue == '1'" [(ngModel)]="state" (change)="onSearch(search.value)">
+                    <select class="w3-select w3-border bg-transparent" id="service" [disabled]="regValue == '1'" [(ngModel)]="state" (change)="onSearch(search.value)">
                         <option value="" selected>--- Tous les états ---</option>
                         <option value="1">Transmis</option>
                         <option value="2">Non transmis</option>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="w-25 form-group mt-2 ms-3">
                     <label for="registre" class="txt-blue fw-bold form-label">Registre</label>
-                    <select class="w3-select w3-border" id="registre" [(ngModel)]="regValue" (change)="onSearch(search.value)" [disabled]="[1,2,3].includes(+state)">
+                    <select class="w3-select w3-border bg-transparent" id="registre" [(ngModel)]="regValue" (change)="onSearch(search.value)" [disabled]="[1,2,3].includes(+state)">
                         <option value="" selected>--- Tous les régistres ---</option>  
                         <option
                         *ngFor="let register of registers"
@@ -87,7 +87,7 @@
                             totalItems: count
                           };
                           let i = index" 
-                          [ngStyle]="{'background-color': mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) < 0 ? 'rgba(188, 255, 188, 0.87)' : mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) == 0 ? 'rgba(255, 179, 179, 0.87)' : ''}">
+                          [ngStyle]="{'background-color': mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) < 0 ? 'rgba(188, 255, 188, 0.87)' : mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) == 0 ? 'rgb(255, 194, 143)' : ''}">
                             <td width="10">{{ mail.mail_ref }}</td>
                             <td width="150">{{ mail.mail_date_received}}</td>
                             <td width="150" class="{{ mail.mail_shipping_date ? '' : 'text-danger' }}">{{ mail.mail_shipping_date ? mail.mail_shipping_date : 'Non traité' }}</td>

@@ -12,7 +12,7 @@
     
     <div class="content mt-4">
         <div class="d-flex justify-content-between align-items-center">
-            <input type="search" placeholder="Tapez votre recherche..." #search class="w3-input w3-border w-50" (keyup)="onSearch(search.value)">
+            <input type="search" placeholder="Tapez votre recherche..." #search class="w3-input w3-border w-50 bg-transparent" (keyup)="onSearch(search.value)">
             <div class="d-flex w-50 ms-5">
                 <button class="btn-green px-3 w-auto" [routerLink]="['/admin/registry/edit-mail', 0]">
                     <fa-icon [icon]="faEnvelope"></fa-icon>&nbsp;
@@ -56,7 +56,7 @@
                         totalItems: count
                       };
                       let i = index" 
-                      [ngStyle]="{'background-color': mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) < 0 ? 'rgba(188, 255, 188, 0.87)' : mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) == 0 ? 'rgba(255, 179, 179, 0.87)' : ''}">
+                      [ngStyle]="{'background-color': mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) < 0 ? 'rgba(188, 255, 188, 0.87)' : mail.mail_shipping_date && getTimeDifference(mail.mail_shipping_date) == 0 ? 'rgb(255, 194, 143)' : ''}">
                         <td width="10">{{ mail.mail_ref }}</td>
                         <td width="100">{{ mail.mail_date_received}}</td>
                         <td width="100" *ngIf="id == 2">{{ mail.mail_shipping_date  }}</td>
@@ -136,7 +136,7 @@
                 <div class="form-group">
                     <label class="form-label">Ajouter une pièce jointe.</label>
                     <label for="pj" class="form-label btn-orange p-2 text-center" style="cursor: pointer;">Pièce jointe</label>
-                    <input type="file" id="pj" multiple="multiple" (change)="onFileChange($event)">
+                    <input type="file" id="pj" multiple="multiple" accept="application/pdf" (change)="onFileChange($event)">
                 </div>
             </div>
             <div class="mt-3 col-12 row">
