@@ -1,5 +1,5 @@
-<div class="w3-animate-right">
-    <div class="header d-flex pb-2 w3-border-bottom align-items-center justify-content-between">
+<div class="w3-animate-right" id="print-section">
+    <div class="header d-flex pb-2 w3-border-bottom align-items-center justify-content-between printRemove">
         <div>
             <h3><strong class="txt-blue m-0">Statistiques des courriers</strong></h3>
             <small class="m-0">{{ ('du ' + (firstDayOfWeek | date: 'dd') + ' au ' + (lastDayOfWeek | date: 'dd') + ' ' + (lastDayOfWeek | date: 'MMMM')) | uppercase }}</small>
@@ -13,97 +13,100 @@
         </div>
 
         <div class="d-flex w-auto">
-            <button class="btn-green px-3" routerLink="/admin/registry/edit-mail/0">
+            <button class="btn-green px-3" routerLink="/admin/registry/edit-mail/0" *ngIf="currentUser.data.user_role != 'CONSULTANT'">
                 <fa-icon [icon]="faEnvelope"></fa-icon>
                 Nouveau courrier
             </button>
 
-            <!-- <button class="btn-orange ms-3 w-auto px-3" data-bs-toggle="modal" data-bs-target="#importModal">
+            <button class="btn-orange ms-3 w-auto px-3" data-bs-toggle="modal" data-bs-target="#importModal" *ngIf="currentUser.data.user_role != 'CONSULTANT'">
                 <fa-icon [icon]="faFileImport"></fa-icon>
-            </button> -->
+            </button> 
 
-            <button class="btn-red ms-3 w-auto px-3" (click)="onPrint(firstDate.value, lastDate.value)">
-                <fa-icon [icon]="faPrint"></fa-icon>
-            </button>
+            <a href="#" class="btn-red ms-3 w-auto px-3 d-flex link-light text-decoration-none">
+                <fa-icon [icon]="faPrint" class="me-1"></fa-icon>
+                Rapport
+            </a>
         </div>
     </div>
-    <div class="p-3 row">
-        <div class="col-2 p-2">
-            <div class="rounded d-flex" style="height: 80px; background-color: rgb(239, 246, 255)">
-                <div class="d-flex px-3 align-items-center justify-content-between w-100">
-                    <div class="d-flex flex-column align-items-center justify-content-center">
-                        <h4 class="mb-1" style="opacity: .3;"><fa-icon [icon]="faMailBulk"></fa-icon></h4>
-                        <strong class="txt-blue">Total</strong>
-                    </div>
-                    <div class="col-4 d-flex align-items-center justify-content-end">
-                        <h4><strong style="opacity: .5; font-family: 'Roboto';">{{ statistics ? statistics.total_mail : '' }}</strong></h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-2 p-2">
-            <div class="rounded d-flex" style="height: 80px; background-color: rgb(255, 239, 239)">
-                <div class="d-flex px-3 align-items-center justify-content-between w-100">
-                    <div class="d-flex flex-column align-items-center justify-content-center">
-                        <h4 class="mb-1" style="opacity: .3;"><fa-icon [icon]="faPause"></fa-icon></h4>
-                        <strong class="text-danger">En attente</strong>
-                    </div>
-                    <div class="col-4 d-flex align-items-center justify-content-end">
-                        <h4><strong style="opacity: .5; font-family: 'Roboto';">{{ statistics ? statistics.mail_in_waiting : '' }}</strong></h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-2 p-2">
-            <div class="rounded d-flex" style="height: 80px; background-color: rgb(255, 251, 239)">
-                <div class="d-flex px-3 align-items-center justify-content-between w-100">
-                    <div class="d-flex flex-column align-items-center justify-content-center">
-                        <h4 class="mb-1" style="opacity: .3;"><fa-icon [icon]="faUserTie"></fa-icon></h4>
-                        <strong class="text-warning">Courrier DG</strong>
-                    </div>
-                    <div class="col-4 d-flex align-items-center justify-content-end">
-                        <h4><strong style="opacity: .5; font-family: 'Roboto';">{{ statistics ? statistics.mail_dg : '' }}</strong></h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-2"></div>
-    </div>
-
-    <div class="mt-3">
-        <p class="fw-bold txt-blue"> &bull; Statistiques des courriers par nature de la demande</p>
-        <table class="w-100">
-            <tbody>
-                <tr *ngFor="let objectStatistics of statistics.total_by_object">
-                    <td class="w-25 fw-bold pb-3"><div class="text-overflow">{{ objectStatistics.mail_object }}</div></td>
-                    <td class="w-50 px-5">
-                        <div class="w-100 bg-light rounded" style="height: 5px;">
-                            <div class="h-100 bg-green rounded" [style.width]="(objectStatistics.total/statistics.total_mail)*100 + '%'"></div>
+    <div class="w3-animate-opacity">
+        <div class="p-3 row printSection">
+            <div class="col-2 p-2">
+                <div class="rounded d-flex" style="height: 80px; background-color: rgb(239, 246, 255)">
+                    <div class="d-flex px-3 align-items-center justify-content-between w-100">
+                        <div class="d-flex flex-column align-items-center justify-content-center">
+                            <h4 class="mb-1" style="opacity: .3;"><fa-icon [icon]="faMailBulk"></fa-icon></h4>
+                            <strong class="txt-blue">Total</strong>
                         </div>
-                    </td>
-                    <td style="font-style: italic;">{{ (objectStatistics.total/statistics.total_mail) * 100 | number: '1.2-2' }} %</td>
-                    <td>{{ objectStatistics.total }} courrier(s)</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="my-3">
-        <select class="form-select w-25 ms-auto mb-3 bg-transparent" #year (change)="onGetStat(+year.value)">
-            <option
-            *ngFor="let year of years"
-             [value]="year">{{ year }}</option>
-        </select>
-        <highcharts-chart
-            id="chart"
-            [Highcharts] = "highcharts"
-            [options]="chartOptions"
-            class="border rounded p-2"
-            style = "width: 100%; height: 400px; display: block;">
-        </highcharts-chart>
+                        <div class="col-4 d-flex align-items-center justify-content-end">
+                            <h4><strong style="opacity: .5; font-family: 'Roboto';">{{ statistics ? statistics.total_mail : '' }}</strong></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-2 p-2">
+                <div class="rounded d-flex" style="height: 80px; background-color: rgb(255, 239, 239)">
+                    <div class="d-flex px-3 align-items-center justify-content-between w-100">
+                        <div class="d-flex flex-column align-items-center justify-content-center">
+                            <h4 class="mb-1" style="opacity: .3;"><fa-icon [icon]="faPause"></fa-icon></h4>
+                            <strong class="text-danger">En attente</strong>
+                        </div>
+                        <div class="col-4 d-flex align-items-center justify-content-end">
+                            <h4><strong style="opacity: .5; font-family: 'Roboto';">{{ statistics ? statistics.mail_in_waiting : '' }}</strong></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-2 p-2">
+                <div class="rounded d-flex" style="height: 80px; background-color: rgb(255, 251, 239)">
+                    <div class="d-flex px-3 align-items-center justify-content-between w-100">
+                        <div class="d-flex flex-column align-items-center justify-content-center">
+                            <h4 class="mb-1" style="opacity: .3;"><fa-icon [icon]="faUserTie"></fa-icon></h4>
+                            <strong class="text-warning">Courrier DG</strong>
+                        </div>
+                        <div class="col-4 d-flex align-items-center justify-content-end">
+                            <h4><strong style="opacity: .5; font-family: 'Roboto';">{{ statistics ? statistics.mail_dg : '' }}</strong></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="mt-3 printSection">
+            <p class="fw-bold txt-blue"> &bull; Statistiques des courriers par nature de la demande</p>
+            <table class="w-100">
+                <tbody>
+                    <tr *ngFor="let objectStatistics of statistics.total_by_object">
+                        <td class="w-25 fw-bold pb-3"><div class="text-overflow">{{ objectStatistics.mail_object }}</div></td>
+                        <td class="w-50 px-5">
+                            <div class="w-100 bg-light rounded" style="height: 5px;">
+                                <div class="h-100 bg-green rounded" [style.width]="(objectStatistics.total/statistics.total_mail)*100 + '%'"></div>
+                            </div>
+                        </td>
+                        <td style="font-style: italic;">{{ (objectStatistics.total/statistics.total_mail) * 100 | number: '1.2-2' }} %</td>
+                        <td align="right">{{ objectStatistics.total }} courrier(s)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    
+        <div id="pieChart" class="mt-3 printSection" style = "width: 100%; height: 500px; display: block;"></div>
+    
+        <div class="my-3">
+            <select class="form-select w-25 ms-auto mb-3 bg-transparent printRemove" #year (change)="onGetStat(+year.value)">
+                <option
+                *ngFor="let year of years"
+                 [value]="year.year" [selected]="year.year == nowDate.getFullYear() - 1">{{ year.year }}</option>
+            </select>
+            <highcharts-chart
+                id="chart"
+                [Highcharts]="highcharts"
+                [options]="chartOptions"
+                class="border rounded p-2 printSection"
+                style = "width: 100%; height: 400px; display: block;">
+            </highcharts-chart>
+        </div>
     </div>
 </div>
 
@@ -130,10 +133,10 @@
                     <thead class="thead-blue">
                         <tr>
                             <th>Date rcp.</th>
-                            <!-- <th>Date trs.</th> -->
                             <th>Expéditeur.</th>
                             <th>Objet.</th>
                             <th>Destinataire.</th>
+                            <th>Date trs.</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -149,7 +152,7 @@
                             totalItems: count
                           };
                           let i = index">
-                            <td width="100">{{ mail["Date de réception"]}}</td>
+                            <td width="100">{{ mail["Date de réception"] | date: 'yyyy-MM-dd' }}</td>
                             <!-- <td width="100">{{ mail["Date de transmission"] }}</td> -->
                             <td width="200"><div class="text-overflow">{{ mail["Expéditeur"] }}</div></td>
                             <td class="w-25"><div class="text-overflow">{{ mail.Objet }}</div></td>
@@ -161,6 +164,7 @@
                                     [value]="direction.dir_label">{{ direction.dir_label }}</option>
                                 </datalist>
                             </div></td>
+                            <td width="100">{{ mail["Date de transmission"] | date: 'yyyy-MM-dd' }}</td>
                             <td align="right">
                                 <button class="btn btn-outline-danger btn-sm" (click)="deleteMail(i)" *ngIf="!loading[i] && !success[i]">
                                     <fa-icon [icon]="faTrash"></fa-icon>

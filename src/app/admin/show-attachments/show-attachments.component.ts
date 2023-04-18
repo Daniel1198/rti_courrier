@@ -26,14 +26,14 @@ export class ShowAttachmentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id')!;
-    this.getAttachments();
+    // this.getAttachments();
   }
 
-  getAttachments() {
-    this.mailService.getMailAttachments(this.id).subscribe(
-      response => this.attachments = response.results
-    );
-  }
+  // getAttachments() {
+  //   this.mailService.getMailAttachments(this.id).subscribe(
+  //     response => this.attachments = response.results
+  //   );
+  // }
 
   onBack() {
     history.back();

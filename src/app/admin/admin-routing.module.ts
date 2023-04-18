@@ -11,6 +11,8 @@ import { RegistryComponent } from './registry/registry.component';
 import { SearchMailComponent } from './search-mail/search-mail.component';
 import { ShowAttachmentsComponent } from './show-attachments/show-attachments.component';
 import { UsersComponent } from './users/users.component';
+import { ArchiveComponent } from './archive/archive.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 const routes: Routes = [
   { 
@@ -23,6 +25,8 @@ const routes: Routes = [
         { path: 'show-attachments/:id', component: ShowAttachmentsComponent },
         { path: 'edit-mail/:id', component: EditMailComponent },
       ] },
+      { path: 'archives/:id', component: ArchiveComponent },
+      { path: 'notifications', component: NotificationsComponent },
       { path: 'search', component: SearchMailComponent },
       { 
         path: 'settings', component: AdministrationComponent, children: [

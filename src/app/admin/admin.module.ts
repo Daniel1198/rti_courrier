@@ -20,6 +20,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoaderModule } from '../loader/loader.module';
 import { ShowAttachmentsComponent } from './show-attachments/show-attachments.component';
 import localeFr from '@angular/common/locales/fr';
+import { NgxPrintModule } from 'ngx-print';
+import { ArchiveComponent } from './archive/archive.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+import { SearchPipe } from '../pipes/search.pipe';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -35,7 +39,10 @@ registerLocaleData(localeFr, 'fr');
     RegistryComponent,
     UsersComponent,
     EditUserComponent,
-    ShowAttachmentsComponent
+    ShowAttachmentsComponent,
+    ArchiveComponent,
+    NotificationsComponent,
+    SearchPipe
   ],
   imports: [
     CommonModule,
@@ -46,6 +53,7 @@ registerLocaleData(localeFr, 'fr');
     ReactiveFormsModule,
     FormsModule,
     LoaderModule,
+    NgxPrintModule,
     SweetAlert2Module.forRoot()
   ],
   providers: [{provide: LOCALE_ID, useValue: 'fr-FR' }]

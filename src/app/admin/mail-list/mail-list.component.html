@@ -13,8 +13,8 @@
     <div class="content mt-4">
         <div class="d-flex justify-content-between align-items-center">
             <input type="search" placeholder="Tapez votre recherche..." #search class="w3-input w3-border w-50 bg-transparent" (keyup)="onSearch(search.value)">
-            <div class="d-flex w-50 ms-5">
-                <button class="btn-green px-3 w-auto" [routerLink]="['/admin/registry/edit-mail', 0]">
+            <div class="d-flex w-auto ms-5">
+                <button class="btn-green px-3 w-auto" [routerLink]="['/admin/registry/edit-mail', 0]" *ngIf="currentUser.data.user_role != 'CONSULTANT'">
                     <fa-icon [icon]="faEnvelope"></fa-icon>&nbsp;
                     Nouveau courrier
                 </button>
@@ -22,16 +22,12 @@
                     <fa-icon [icon]="faFileExport"></fa-icon>&nbsp;
                     Exporter
                 </button>
-                <button class="btn-red px-3 ms-2 w-auto">
-                    <fa-icon [icon]="faFileImport"></fa-icon>
-                    Importer
-                </button>
             </div>
         </div>
         <div class="text-center" *ngIf="loading">
             <app-loader></app-loader>
         </div>
-        <div class="mt-3 w3-border p-3">
+        <div class="mt-3 w3-border p-3 w3-animate-opacity">
             <table class="table table-striped">
                 <thead class="thead-blue">
                     <tr>
@@ -63,19 +59,21 @@
                         <td width="200"><div class="text-overflow">{{ mail.mail_corresponding }}</div></td>
                         <td class="w-25"><div class="text-overflow">{{ mail.mail_object }}</div></td>
                         <td class="w-25"><div class="text-overflow">{{ mail.dir_label | titlecase }}</div></td>
-                        <td class="d-flex">
-                            <button class="btn btn-outline-info btn-sm me-3" data-bs-toggle="modal" data-bs-target="#showMoreInfo" (click)="getMail(mail)">
-                                <fa-icon [icon]="faEye"></fa-icon>
-                            </button>
-                            <button class="btn btn-outline-success btn-sm me-3" *ngIf="id === 1" data-bs-toggle="modal" data-bs-target="#mailHandled" (click)="getIdMail(mail.mail_ref)">
-                                <fa-icon [icon]="faCheck"></fa-icon>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm me-3" *ngIf="id === 1" [routerLink]="['/admin/registry/edit-mail', mail.mail_ref]">
-                                <fa-icon [icon]="faPencil"></fa-icon>
-                            </button>
-                            <button class="btn btn-outline-danger btn-sm" *ngIf="currentUser.data.user_isAdmin == 1" (click)="onDelete(mail.mail_ref)">
-                                <fa-icon [icon]="faTrash"></fa-icon>
-                            </button>
+                        <td align="right">
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-outline-info btn-sm me-3" data-bs-toggle="modal" data-bs-target="#showMoreInfo" (click)="getMail(mail)">
+                                    <fa-icon [icon]="faEye"></fa-icon>
+                                </button>
+                                <button class="btn btn-outline-success btn-sm me-3" *ngIf="id === 1 && currentUser.data.user_role != 'CONSULTANT'" data-bs-toggle="modal" data-bs-target="#mailHandled" (click)="getIdMail(mail.mail_ref); error = false; success = true">
+                                    <fa-icon [icon]="faCheck"></fa-icon>
+                                </button>
+                                <button class="btn btn-outline-primary btn-sm me-3" *ngIf="id === 1 && currentUser.data.user_role != 'CONSULTANT'" [routerLink]="['/admin/registry/edit-mail', mail.mail_ref]">
+                                    <fa-icon [icon]="faPencil"></fa-icon>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" *ngIf="currentUser.data.user_role == 'ADMINISTRATEUR'" (click)="onDelete(mail.mail_ref)">
+                                    <fa-icon [icon]="faTrash"></fa-icon>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -159,7 +157,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Fermer</button>
-          <button type="submit" class="btn btn-sm btn-success" (click)="onSubmit()" [disabled]="formGroup.invalid">Enregistrer</button>
+          <button type="submit" class="btn btn-sm btn-success" [disabled]="formGroup.invalid">Enregistrer</button>
         </div>
     </form>
     </div>
@@ -178,7 +176,7 @@
                     <input type="text" class="form-control w-100" [value]="mail ? 'N° '+mail.mail_ref : ''" disabled>
                 </div>
                 <div class="col-6">
-                    <button class="btn btn-secondary w-100" [routerLink]="['/admin/registry/show-attachments', mail ? mail.mail_ref : '']" data-bs-dismiss="modal">
+                    <button class="btn btn-secondary w-100" [routerLink]="['/admin/archives/', mail ? mail.mail_ref : '']" data-bs-dismiss="modal">
                         Pièces jointes
                     </button>
                 </div>

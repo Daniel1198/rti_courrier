@@ -39,7 +39,7 @@ export class MailService {
     return this.http.get<any>(this.urlg + '/delete/mail.php?mail_ref=' + ref);
   }
 
-  getMailAttachments(ref: string): Observable<any> {
-    return this.http.get<any>(this.urlg + '/read/attachments_by_mail.php?mail_ref=' + ref);
+  getAttachments(): Observable<any> {
+    return this.http.get<any>(this.urlg + '/read/attachments.php?');
   }
 }

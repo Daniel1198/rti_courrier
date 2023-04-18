@@ -1,3 +1,14 @@
 ** {
     font-family: 'Inter';
 }
+
+.headerPrint {
+    display: none;
+}
+
+@media print {
+
+    .headerPrint {
+        display: inline;
+    }
+}

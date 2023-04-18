@@ -143,6 +143,8 @@ export class MailListComponent implements OnInit {
 
   onSubmit() {
     this.load = true;
+    this.success = false;
+    this.error = false;
     const formData = new FormData();
 
     formData.append('mail_ref', this.idMail.toString());
@@ -205,6 +207,9 @@ export class MailListComponent implements OnInit {
         this.files.push(event.target.files[i]);
       }
     }
+
+    console.log(this.files);
+    
   }
 
   removeFile(index: number) {

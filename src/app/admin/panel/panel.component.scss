@@ -31,3 +31,13 @@ ul li > a:hover {
     background-color: #5483aac7;
     color: white;
 }
+
+.print {
+    width: 80%;
+}
+
+@media print {
+    .print {
+        width: 100%;
+    }
+}

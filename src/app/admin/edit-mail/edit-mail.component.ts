@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { CorrespondingsService } from 'src/app/services/correspondings.service';
 import { MailService } from 'src/app/services/mail.service';
 import { ObjectService } from 'src/app/services/object.service';
 import { ReceiverService } from 'src/app/services/receiver.service';
@@ -16,6 +17,7 @@ export class EditMailComponent implements OnInit {
 
   directions: any[] = []
   objects: any[] = []
+  correspondings: any[] = []
   formGroup!: FormGroup;
   id!: string;
 
@@ -38,7 +40,8 @@ export class EditMailComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private objectService: ObjectService
+    private objectService: ObjectService,
+    private correspondingService: CorrespondingsService
   ) {}
 
   ngOnInit(): void {
@@ -47,12 +50,21 @@ export class EditMailComponent implements OnInit {
     this.getAllDirection();
     this.loadMail();
     this.getObjects();
+    this.getCorresponding();
   }
 
   getObjects() {
     this.objectService.getObjects().subscribe(
       response => {
         this.objects = response.results
+      }
+    );
+  }
+
+  getCorresponding() {
+    this.correspondingService.getCorresponding().subscribe(
+      response => {
+        this.correspondings = response.results
       }
     );
   }

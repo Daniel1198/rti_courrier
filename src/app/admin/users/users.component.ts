@@ -167,7 +167,7 @@ export class UsersComponent implements OnInit {
                 </div>
                 <div class="col-6 form-group mb-4">
                     <label for="" class="form-label fw-bold">Rôle</label>
-                    <input type="text" class="form-control" readonly value="${response.results[0].user_isadmin == 0 ? 'Simple utilisateur' : 'Administrateur'}">
+                    <input type="text" class="form-control" readonly value="${response.results[0].user_role}">
                 </div>
             </div>
             `,

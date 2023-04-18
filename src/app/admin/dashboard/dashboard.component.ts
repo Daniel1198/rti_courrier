@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faCheck, faEnvelope, faFileImport, faMailBulk, faPause, faPrint, faTrash, faUpRightFromSquare, faUserTie } from '@fortawesome/free-solid-svg-icons';
 import * as Highcharts from 'highcharts';
-import jsPDF from 'jspdf';
 import * as moment from 'moment';
 import { AuthService } from 'src/app/services/auth.service';
 import { ConfigService } from 'src/app/services/config.service';
@@ -10,7 +9,7 @@ import { ReceiverService } from 'src/app/services/receiver.service';
 import { StatisticsService } from 'src/app/services/statistics.service';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
-import html2canvas from 'html2canvas';
+import { YearService } from 'src/app/services/year.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -40,11 +39,14 @@ export class DashboardComponent implements OnInit {
     directions: any[] = [];
     success: boolean[] = [];
     statistics: any;
-    years: number[] = [];
+    years: any[] = [];
+    nowDate = new Date();
     firstDayOfWeek!: Date;
     lastDayOfWeek!: Date;
     highcharts = Highcharts;
     chartOptions!: Highcharts.Options;
+    chartOptions2!: Highcharts.Options;
+    currentUser: any;
     Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
@@ -63,22 +65,24 @@ export class DashboardComponent implements OnInit {
         private mailService: MailService,
         private configService: ConfigService,
         private authService: AuthService,
-
+        private yearService: YearService
     ) {
         this.exempleLink = this.configService.urlg + this.exempleLink;
     }
 
     ngOnInit(): void {
+        this.currentUser = this.authService.currentUser;
         this.firstDayOfWeek = moment().startOf('week').toDate();
         this.lastDayOfWeek = moment().endOf('week').toDate();
         const firstDate = this.firstDayOfWeek.getFullYear() + '-' + ((this.firstDayOfWeek.getMonth() + 1) > 9 ? ((+this.firstDayOfWeek.getMonth() + 1)) : '0' + (this.firstDayOfWeek.getMonth() + 1)) + '-' + (this.firstDayOfWeek.getDate() > 9 ? this.firstDayOfWeek.getDate() : '0' + this.firstDayOfWeek.getDate());
         const lastDate = this.lastDayOfWeek.getFullYear() + '-' + ((this.lastDayOfWeek.getMonth() + 1) > 9 ? ((+this.lastDayOfWeek.getMonth() + 1)) : '0' + (this.lastDayOfWeek.getMonth() + 1)) + '-' + (this.lastDayOfWeek.getDate() > 9 ? this.lastDayOfWeek.getDate() : '0' + this.lastDayOfWeek.getDate());
         this.getStatistics(firstDate, lastDate);
-        const nowDate = new Date();
-        for (let i = nowDate.getFullYear(); i >= 2020; i--) {
-            this.years.push(i);
-        };
-        this.onGetStat(nowDate.getFullYear());
+        this.yearService.getAllYear().subscribe(
+            response => {
+                this.years = response.results
+                this.onGetStat(this.years[1].year);
+            }
+        );
         this.getAllDirection();
     }
 
@@ -86,6 +90,37 @@ export class DashboardComponent implements OnInit {
         this.statisticService.getStatisticByPeriod(firstDate, lastDate).subscribe(
             response => {
                 this.statistics = response.results;
+                let chartData: any[] = []
+
+                response.results.total_by_corresponding.forEach((stat: any) => {
+                    chartData.push({
+                        name: stat.mail_corresponding,
+                        y: +stat.total
+                    })
+                });
+                this.chartOptions2 = {
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Statistiques Des Courriers par Expéditeur',
+                    },
+                    plotOptions: {
+                        pie: {
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.name} : {point.y}'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Courrier total',
+                        data: chartData,
+                        type: 'pie'
+                    }]
+                };
+        
+                const pieChart = new Highcharts.Chart('pieChart', this.chartOptions2);
             }
         );
     }
@@ -110,7 +145,7 @@ export class DashboardComponent implements OnInit {
                         type: 'month'
                     },
                     title: {
-                        text: 'Statistiques Des Courriers en 2022',
+                        text: 'Statistiques Des Courriers en ' + year,
                     },
                     xAxis: {
                         categories: categories,
@@ -156,8 +191,6 @@ export class DashboardComponent implements OnInit {
                 };
             }
         );
-
-        
     }
 
     importFile(event: any) {
@@ -170,7 +203,14 @@ export class DashboardComponent implements OnInit {
             var workbook = XLSX.read(fileReader.result, { type: 'binary' });
             var sheetNames = workbook.SheetNames;
             this.mails = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNames[0]]);
+            console.log(this.mails);
+            
         }
+    }
+
+    getTime(nbreJr: number): Date {
+        const date = new Date(nbreJr*24*3600000);
+        return date;
     }
 
     getAllDirection() {
@@ -193,6 +233,7 @@ export class DashboardComponent implements OnInit {
             formData.append('mail_corresponding', this.mails[i]["Expéditeur"]);
             formData.append('mail_object', this.mails[i]["Objet"]);
             formData.append('mail_date_received', this.mails[i]["Date de réception"]);
+            formData.append('mail_shipping_date', this.mails[i]["Date de transmission"]);
             formData.append('id_direction', direction.dir_id);
             formData.append('id_user', cu.data.user_id);
 
@@ -217,79 +258,7 @@ export class DashboardComponent implements OnInit {
     deleteMail(index: number) {
         this.mails.splice(index, 1);
     }
-
-    onPrint(dateDeb: string, dateFin: string) {
-        const doc = new jsPDF();
-        const date = new Date();
-
-        // Configuration de l'entête de la page
-        doc.addImage('assets/icon.png', 'png', 10, 10, 10, 6);
-        doc.setFontSize(7);
-        doc.setFont('helvetica');
-        doc.text('SG2 COURRIER', 22, 14);
-        doc.text(date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear(), 188, 14);
-        doc.line(10, 19, 200, 19);
-
-        // Configuration du titre de la page
-        doc.setFontSize(15);
-        doc.setFont('helvetica', 'bold');
-        doc.text('STATISTIQUES DU ' + dateDeb + ' AU ' + dateFin, 50, 33);
-
-        // Données à afficher
-        doc.setFontSize(8);
-        doc.setFont('helvetica', 'normal');
-        doc.text('NOMBRE TOTAL DE COURRIERS : ..................', 13, 42);
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(255, 102, 102);
-        doc.text(this.statistics.total_mail, 73, 42);
-
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(8);
-        doc.setFont('helvetica', 'normal');
-        doc.text('COURRIERS EN ATTENTE : ....................', 13, 48);
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(255, 102, 102);
-        doc.text(this.statistics.mail_in_waiting, 65, 48);
-
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(8);
-        doc.setFont('helvetica', 'normal');
-        doc.text('COURRIERS DIRECTION GENERALE : ..................', 13, 54);
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(255, 102, 102);
-        doc.text(this.statistics.mail_dg, 78, 54);
-
-        doc.setTextColor(0, 128, 255);
-        doc.setFontSize(10);
-        doc.setFont('helvetica', 'bolditalic');
-        doc.text('-- Statistiques des courriers par demande de la nature', 18, 65);
-        
-        doc.setTextColor(0, 0, 0);
-        doc.setFontSize(10);
-        for (let i = 0; i < this.statistics.total_by_object.length; i++) {
-            doc.setFont('courier', 'normal');
-            doc.text(this.statistics.total_by_object[i].mail_object, 13, 75 + (7*i));
-            doc.setFont('helvetica', 'bold');
-            doc.text(this.statistics.total_by_object[i].total, 192, 75 + (7*i));
-            doc.setDrawColor(204, 204, 204);
-            doc.setLineWidth(0.03);
-            doc.line(13, 75 + (7*i), 190, 75 + (7*i));
-        }
-
-        html2canvas(document.getElementById("chart") as HTMLElement).then((canvas) => {
-            doc.addImage(canvas.toDataURL("image/PNG"), 'png', 13, 75 + (5 * this.statistics.total_by_object.length), 190, 200)
-        })
     
-        // ouverture du fichier à imprimer dans un nouvel onglet
-        const pdfBytes = doc.output('arraybuffer');
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-        const fileUrl = URL.createObjectURL(blob);
-        window.open(fileUrl);
-      }
-
     changeSize(value: string) {
         this.tableSize = +value;
     }

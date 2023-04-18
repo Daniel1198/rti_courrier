@@ -6,7 +6,7 @@
             </ol>
         </nav>    
     </div>
-    <div class="content mt-4">
+    <div class="content mt-4 w3-animate-opacity">
         <div class="w3-border p-2 d-flex align-items-center bg-blue text-white">
             <img src="assets/images/email.png" alt="" class="me-3">
             Nouveau courrier
@@ -26,8 +26,8 @@
                         <datalist id="expediteur">
                             <select>
                                 <option 
-                                *ngFor="let direction of directions"
-                                [value]="direction.dir_label">{{ direction.dir_label }}</option>
+                                *ngFor="let correspondant of correspondings"
+                                [value]="correspondant.mail_corresponding">{{ correspondant.mail_corresponding }}</option>
                             </select>
                         </datalist>
                     </div>

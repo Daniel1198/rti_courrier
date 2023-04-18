@@ -1,4 +1,4 @@
-<header style="height: 8vh;" class="bg-green shadow-sm">
+<header style="height: 8vh;" class="bg-green shadow-sm printRemove">
     <div class="container d-flex align-items-center h-100 justify-content-between">
         <div class="d-flex">
             <img src="favicon.ico" alt="logo" width="50">
@@ -32,7 +32,7 @@
     </div>
 </header>
 <div style="height: 92vh;" class="w3-animate-left d-flex">
-    <div class="py-4 bg-warning bg-opacity-10" style="width: 20%;">
+    <div class="py-4 bg-light printRemove" style="width: 20%;">
         <div class="w-100 h-100 p-3">
             <div class="d-flex align-items-center">
                 <div 
@@ -70,13 +70,26 @@
                             Courriers
                         </a>
                     </li>
+                    <li routerLink="/admin/archives/0" routerLinkActive="active shadow">
+                        <a>
+                            <fa-icon [icon]="faArchive" class="me-3"></fa-icon>
+                            Archives
+                        </a>
+                    </li>
                     <li routerLink="/admin/search" routerLinkActive="active shadow">
                         <a>
                             <fa-icon [icon]="faSearch" class="me-3"></fa-icon>
                             Recherche
                         </a>
                     </li>
-                    <li routerLink="/admin/settings" routerLinkActive="active shadow" *ngIf="currentUser.data.user_isAdmin == 1">
+                    <li routerLink="/admin/notifications" routerLinkActive="active shadow" *ngIf="currentUser.data.user_role != 'CONSULTANT'">
+                        <a>
+                            <fa-icon [icon]="faBell" class="me-3"></fa-icon>
+                            Notifications
+                            <div class="w3-badge bg-danger ms-3">3</div>
+                        </a>
+                    </li>
+                    <li routerLink="/admin/settings" routerLinkActive="active shadow" *ngIf="currentUser.data.user_role == 'ADMINISTRATEUR'">
                         <a>
                             <fa-icon [icon]="faCog" class="me-3"></fa-icon>
                             Administration
@@ -86,7 +99,7 @@
             </div>
         </div>
     </div>
-    <div class="py-4 px-4 overflow-auto" style="width: 80%;">
+    <div class="py-4 px-4 overflow-auto print">
         <router-outlet></router-outlet>
     </div>
 </div>

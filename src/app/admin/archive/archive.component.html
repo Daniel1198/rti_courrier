@@ -1,0 +1,55 @@
+<div class="w3-animate-right">
+    <div class="bg-light px-3 pt-1">
+        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Archives</li>
+            </ol>
+        </nav>    
+    </div>
+
+    <div class="content my-4 px-3">
+        <div class="d-flex">
+            <input 
+            type="search" 
+            class="w3-border w3-input bg-transparent w-50"
+            [(ngModel)]="search"
+            placeholder="Rechercher selon le nom du fichier ou du numéro du courrier"
+            >
+
+            <div class="w-50 ms-3">
+                <div class="form-group">
+                    <div class="d-flex align-items-center">
+                        <label for="debut" class="fw-bold">Du</label>
+                        <input type="date" class="w3-border w3-input mx-3 bg-transparent" id="debut" [(ngModel)]="initialDate" (change)="onSearch()">
+                        <label for="fin" class="fw-bold">Au</label>
+                        <input type="date" class="w3-border w3-input mx-3 bg-transparent" id="fin" [(ngModel)]="finalDate" (change)="onSearch()" [disabled]="!initialDate">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-5 text-center w3-animate-opacity" *ngIf="attachmentsByDate.length == 0">
+            Aucune archive correspondant à la recherche n'a été trouvée.
+        </div>
+        <div class="mt-5 w3-animate-opacity" *ngIf=" attachmentsByDate.length != 0">
+            <div *ngFor="let data of attachmentsByDate">
+                <div *ngIf="(data.donnees | search: search ? search : '').length != 0">
+                    <div class="d-flex align-items-center">
+                        <small class="fw-bold alert alert-success rounded-pill py-1 m-0">{{ data.date == nowDate ? "Aujourd'hui" : data.date }}</small>
+                        <div style="border: 1px dashed rgb(210, 210, 210); width: 90%;" class="ms-2"></div>
+                    </div>
+                    <div class="row my-5">
+                        <div class="col-2" *ngFor="let pj of data.donnees | search: search ? search : ''">
+                            <a
+                             href="{{ urlg + pj.attach_link }}"
+                             class="rounded-2 border-0 btn btn-outline-light text-center text-dark mb-3">
+                                <img src="../../../assets/images/pdf.png" alt="">
+                                <small class="text-overflow">{{ pj.attach_label }}</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    

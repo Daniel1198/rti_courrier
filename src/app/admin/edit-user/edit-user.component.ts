@@ -53,7 +53,7 @@ export class EditUserComponent implements OnInit {
       lastname: ['', Validators.required],
       firstname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      isAdmin: [''],
+      role: ['', Validators.required],
       password: ['', this.id !== 0 ? Validators.nullValidator : Validators.required],
       confirmPassword: [
         '', 
@@ -96,7 +96,7 @@ export class EditUserComponent implements OnInit {
               lastname: response.results[0].user_lastname,
               firstname: response.results[0].user_firstname,
               email: response.results[0].user_email,
-              isAdmin: response.results[0].user_isadmin,
+              role: response.results[0].user_role,
             })
           }
         }
@@ -115,7 +115,7 @@ export class EditUserComponent implements OnInit {
     userData.append('user_lastname', this.userGroup.get('lastname')?.value);
     userData.append('user_firstname', this.userGroup.get('firstname')?.value);
     userData.append('user_email', this.userGroup.get('email')?.value);
-    userData.append('user_is_admin', this.userGroup.get('isAdmin')?.value);
+    userData.append('user_role', this.userGroup.get('role')?.value);
     userData.append('user_password', this.userGroup.get('password')?.value);
     userData.append('user_profile', this.userGroup.get('image')?.value);
 

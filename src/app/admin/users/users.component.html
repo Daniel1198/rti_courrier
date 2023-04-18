@@ -7,7 +7,7 @@
         </nav>    
     </div>
 
-    <div class="content mt-4">
+    <div class="content mt-4 w3-animate-opacity">
         <div class="pb-2 w3-border-bottom mb-3">
             <h4 class="txt-blue fw-bold" style="font-family: 'Montserrat';">Gestion des utilisateurs</h4>
         </div>
@@ -37,8 +37,7 @@
                             <img [src]="urlG + user.user_image" alt="" class="rounded-circle" style="width: 70px; height: 70px;">
                             <div class="ms-3">
                                 <p class="m-0 fw-bold" style="font-size: small;">{{ (user.user_lastname + ' ' + user.user_firstname) | titlecase }}</p>
-                                <small>{{ user.user_isadmin == 0 ? 'Utilisateur' : 'Administrateur' }}</small>
-                                <!-- <small class="badge bg-danger d-block">Inactif</small> -->
+                                <small>{{ user.user_role | uppercase }}</small>
                             </div>
                         </div>
     

@@ -108,12 +108,16 @@ export class SearchMailComponent implements OnInit {
     if (this.state) {
       if (this.state == '1') {
         this.mails = this.mails.filter((mail: any) => {
-          return mail.mail_shipping_date ? this.getTimeDifference(mail.mail_shipping_date) < 0 : false;
+          console.log(this.getTimeDifference(mail.mail_shipping_date));
+
+          return mail.mail_shipping_date ? this.getTimeDifference(mail.mail_shipping_date) <= 0 : false;
         });
       }
       else if (this.state == '2') {
         this.mails = this.mails.filter((mail: any) => {
-          return mail.mail_shipping_date ? this.getTimeDifference(mail.mail_shipping_date) > 0 : false;
+          console.log(this.getTimeDifference(mail.mail_shipping_date));
+          
+          return mail.mail_shipping_date ? this.getTimeDifference(mail.mail_shipping_date) > 0 : this.getTimeDifference(mail.mail_shipping_date);
         });
       }
       else {
@@ -161,9 +165,12 @@ export class SearchMailComponent implements OnInit {
 
   getTimeDifference(value: string): number {
     const nowDate = new Date();
-    const date = new Date(value);
     const dt = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate());
-    return date.getTime() - dt.getTime();
+    if (value) {
+      const date = new Date(value);
+      return date.getTime() - dt.getTime();
+    }
+    return - dt.getTime();
   }
 
   getMail(mail: any) {
