@@ -10,6 +10,7 @@ import { StatisticsService } from 'src/app/services/statistics.service';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 import { YearService } from 'src/app/services/year.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,6 +32,9 @@ export class DashboardComponent implements OnInit {
     count: number = 0;
     tableSize: number = 5;
     tableSizes: any = [5, 10, 15, 20];
+    nbrErreur: number = 0;
+    nbrSucces: number = 0;
+    nbrMail: number = 0;
 
     exempleLink = "../uploaded_files/documents/exemple.xlsx";
     urlg: string = '';
@@ -53,7 +57,7 @@ export class DashboardComponent implements OnInit {
         toast: true,
         position: 'top-end',
         showConfirmButton: false,
-        timer: 3000,
+        timer: 5000,
         timerProgressBar: true,
         didOpen: (toast) => {
           toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -80,12 +84,7 @@ export class DashboardComponent implements OnInit {
         const firstDate = this.firstDayOfWeek.getFullYear() + '-' + ((this.firstDayOfWeek.getMonth() + 1) > 9 ? ((+this.firstDayOfWeek.getMonth() + 1)) : '0' + (this.firstDayOfWeek.getMonth() + 1)) + '-' + (this.firstDayOfWeek.getDate() > 9 ? this.firstDayOfWeek.getDate() : '0' + this.firstDayOfWeek.getDate());
         const lastDate = this.lastDayOfWeek.getFullYear() + '-' + ((this.lastDayOfWeek.getMonth() + 1) > 9 ? ((+this.lastDayOfWeek.getMonth() + 1)) : '0' + (this.lastDayOfWeek.getMonth() + 1)) + '-' + (this.lastDayOfWeek.getDate() > 9 ? this.lastDayOfWeek.getDate() : '0' + this.lastDayOfWeek.getDate());
         this.getStatistics(firstDate, lastDate);
-        this.yearService.getAllYear().subscribe(
-            response => {
-                this.years = response.results
-                this.onGetStat(this.years[1].year);
-            }
-        );
+        this.getStatYear();
         this.getAllDirection();
     }
 
@@ -250,6 +249,18 @@ export class DashboardComponent implements OnInit {
         );
     }
 
+    getStatYear() {
+        this.yearService.getAllYear().subscribe(
+            response => {
+                this.years = response.results
+                if (this.years.length > 1)
+                    this.onGetStat(this.years[1].year);
+                else
+                    this.onGetStat(this.years[0].year);
+            }
+        );
+    }
+
     importFile(event: any) {
         const target: DataTransfer = <DataTransfer>(event.target);
         if (target.files.length !== 1) {
@@ -275,7 +286,7 @@ export class DashboardComponent implements OnInit {
             const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
             const wsname: string = wb.SheetNames[0];
             const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-            this.mails = XLSX.utils.sheet_to_json(ws, { header: header });
+            this.mails = XLSX.utils.sheet_to_json(ws, { header: header, dateNF: 'yyyy-mm-dd' });
             this.mails = this.mails.map(mapRow);
             this.mails.shift();
             console.log(this.mails);
@@ -284,7 +295,7 @@ export class DashboardComponent implements OnInit {
     }
 
     getTime(nbreJr: number): Date {
-        const date = new Date(nbreJr*24*3600000);
+        const date = new Date((nbreJr - 25569)*24*3600000);
         return date;
     }
 
@@ -296,46 +307,77 @@ export class DashboardComponent implements OnInit {
         );
     }
 
-    onSubmit() {
-        for (let i = 0; i < this.mails.length ;i++) {
-            this.loading[i] = true;
-            const formData = new FormData();
-            const cu:any = this.authService.currentUser;
+    showToast() {
+        if (this.mails.length == 0) {
+            this.Toast.fire({
+                icon: 'success',
+                title: "Données enregistrées avec succès"
+            });
+        }
+        else if (this.mails.length == this.nbrMail) {
+            this.Toast.fire({
+                icon: 'error',
+                title: "Données non enregistrées"
+            });
+        }
+        else if (this.mails.length != this.nbrMail && this.mails.length != 0){
+            this.Toast.fire({
+                icon: 'warning',
+                title: this.nbrSucces + " enregistrés & " + this.nbrErreur + " non enregistrés"
+            });
+        }
+    }
 
-            formData.append('mail_corresponding', this.mails[i].expediteur);
-            formData.append('mail_object', this.mails[i].objet);
-            formData.append('mail_date_received', this.mails[i].reception);
-            formData.append('mail_shipping_date', this.mails[i].transmission);
-            formData.append('mail_annotation', this.mails[i].annotation);
-            formData.append('mail_imputation', this.mails[i].imputation);
-            formData.append('id_direction', this.mails[i].destinataire.slice(0, 2).trim());
+    onSubmit() {
+        const cu:any = this.authService.currentUser;
+        this.nbrMail = this.mails.length;
+        this.mails.forEach(mail => {
+            const formData = new FormData();
+
+            formData.append('mail_corresponding', mail.expediteur);
+            formData.append('mail_object', mail.objet);
+            formData.append('mail_date_received', formatDate(this.getTime(mail.reception), "yyyy-MM-dd", "fr"));
+            formData.append('mail_shipping_date', mail.transmission ? formatDate(this.getTime(mail.transmission), "yyyy-MM-dd", "fr") : '');
+            formData.append('mail_annotation', mail.annotation);
+            formData.append('mail_imputation', mail.imputation);
+            formData.append('id_direction', mail.destinataire.slice(0, 2).trim());
             formData.append('id_user', cu.data.user_id);
 
             this.mailService.newMail(formData).subscribe(
                 response => {
-                    this.loading[i] = false;
                     if (response.success) {
-                        this.success[i] = true;
                         formData.append('mail_ref', response.results);
-                        if (this.mails[i].transmission) {
+                        if (mail.transmission) {
                             this.mailService.changeMailRegister(formData).subscribe(
-                                response => {
-                                    if (response.success) {
-                                        this.success[i] = true;
+                                res => {
+                                    if (res.success) {
+                                        const index = this.mails.indexOf(mail);
+                                        this.mails.splice(index, 1);
+                                        this.nbrSucces++;
                                     }
                                     else {
-                                        this.success[i] = false;
+                                        this.nbrErreur++;
                                     }
                                 }
                             );
                         }
+                        else {
+                            const index = this.mails.indexOf(mail);
+                            this.mails.splice(index, 1);
+                            this.nbrSucces++;
+                        }
                     }
                     else {
-                        this.success[i] = false;
+                        this.nbrErreur++;
                     }
                 }
             )
-        }
+        })
+        this.showToast();
+        const firstDate = this.firstDayOfWeek.getFullYear() + '-' + ((this.firstDayOfWeek.getMonth() + 1) > 9 ? ((+this.firstDayOfWeek.getMonth() + 1)) : '0' + (this.firstDayOfWeek.getMonth() + 1)) + '-' + (this.firstDayOfWeek.getDate() > 9 ? this.firstDayOfWeek.getDate() : '0' + this.firstDayOfWeek.getDate());
+        const lastDate = this.lastDayOfWeek.getFullYear() + '-' + ((this.lastDayOfWeek.getMonth() + 1) > 9 ? ((+this.lastDayOfWeek.getMonth() + 1)) : '0' + (this.lastDayOfWeek.getMonth() + 1)) + '-' + (this.lastDayOfWeek.getDate() > 9 ? this.lastDayOfWeek.getDate() : '0' + this.lastDayOfWeek.getDate());
+        this.getStatistics(firstDate, lastDate);
+        this.getStatYear();
     }    
     
     changeSize(value: string) {
@@ -351,10 +393,6 @@ export class DashboardComponent implements OnInit {
         this.tableSize = event.target.value;
         this.page = 1;
         this.data;
-    }
-
-    reload() {
-        location.reload();
     }
 }
 

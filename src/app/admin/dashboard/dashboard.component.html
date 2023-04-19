@@ -100,7 +100,7 @@
             <select class="form-select w-25 ms-auto mb-3 bg-transparent printRemove" #year (change)="onGetStat(+year.value)">
                 <option
                 *ngFor="let year of years"
-                 [value]="year.year" [selected]="year.year == nowDate.getFullYear() - 1">{{ year.year }}</option>
+                 [value]="year.year" [selected]="years.length > 1 ? year.year == nowDate.getFullYear() - 1 : year.year == nowDate.getFullYear()">{{ year.year }}</option>
             </select>
             <highcharts-chart
                 id="chart"
@@ -142,7 +142,6 @@
                             <th>Date trs.</th>
                             <th>Annotation.</th>
                             <th>Imputation.</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody *ngIf="mails.length == 0">
@@ -157,7 +156,7 @@
                             totalItems: count
                           };
                           let i = index">
-                            <td width="100">{{ mail.reception | date: 'yyyy-MM-dd' }}</td>
+                            <td width="100">{{ getTime(mail.reception) | date: 'yyyy-MM-dd' }}</td>
                             <td width="100"><div class="text-overflow">{{ mail.expediteur }}</div></td>
                             <td class="w-25"><div class="text-overflow">{{ mail.objet }}</div></td>
                             <td class="w-25"><div class="text-overflow">
@@ -167,17 +166,9 @@
                                     [value]="direction.dir_id" [selected]="mail.destinataire.includes(direction.dir_label)">{{ direction.dir_label }}</option>
                                 </select>
                             </div></td>
-                            <td width="100">{{ mail.transmission | date: 'yyyy-MM-dd' }}</td>
+                            <td width="100">{{ mail.transmission ? (getTime(mail.transmission) | date: 'yyyy-MM-dd') : '' }}</td>
                             <td width="100"><div class="text-overflow">{{ mail.annotation }}</div></td>
                             <td width="100"><div class="text-overflow">{{ mail.imputation }}</div></td>
-                            <td align="right">
-                                <div class="spinner-border text-secondary" role="status" *ngIf="loading[i]">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                                <button class="btn btn-sm btn-success rounded-circle" *ngIf="success[i] && !loading[i]">
-                                    <fa-icon [icon]="faCheck"></fa-icon>
-                                </button>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
