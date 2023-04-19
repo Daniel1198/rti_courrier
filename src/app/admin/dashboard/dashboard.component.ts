@@ -33,6 +33,7 @@ export class DashboardComponent implements OnInit {
     tableSizes: any = [5, 10, 15, 20];
 
     exempleLink = "../uploaded_files/documents/exemple.xlsx";
+    urlg: string = '';
     loading: boolean[] = [];
     data: any = [1, 2, 3, 4, 5, 6];
     mails: any[] = [];
@@ -46,6 +47,7 @@ export class DashboardComponent implements OnInit {
     highcharts = Highcharts;
     chartOptions!: Highcharts.Options;
     chartOptions2!: Highcharts.Options;
+    chartOptions3!: Highcharts.Options;
     currentUser: any;
     Toast = Swal.mixin({
         toast: true,
@@ -68,6 +70,7 @@ export class DashboardComponent implements OnInit {
         private yearService: YearService
     ) {
         this.exempleLink = this.configService.urlg + this.exempleLink;
+        this.urlg = this.configService.urlg;
     }
 
     ngOnInit(): void {
@@ -91,6 +94,8 @@ export class DashboardComponent implements OnInit {
             response => {
                 this.statistics = response.results;
                 let chartData: any[] = []
+                let barData: any[] = []
+                let categories: any[] = []
 
                 response.results.total_by_corresponding.forEach((stat: any) => {
                     chartData.push({
@@ -119,8 +124,56 @@ export class DashboardComponent implements OnInit {
                         type: 'pie'
                     }]
                 };
+
+                response.results.total_by_direction.forEach((stat: any) => {
+                    barData.push(+stat.total);
+                    categories.push(stat.dir_label);
+                });
+
+                this.chartOptions3 = {
+                    chart: {
+                        type: 'bar'
+                    },
+                    title: {
+                        text: 'Statistiques Des Courriers par Direction',
+                    },
+                    xAxis: {
+                        categories: categories,
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Nombre de courriers'
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name} : </td>' +
+                            '<td style="padding-left:5px"><b>{point.y}</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.y}'
+                            },
+                            pointPadding: 0.2,
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: 'Courrier total',
+                        data: barData,
+                        type: 'bar'
+                    }]
+                };
         
                 const pieChart = new Highcharts.Chart('pieChart', this.chartOptions2);
+                const barChart = new Highcharts.Chart('barChart', this.chartOptions3);
             }
         );
     }
@@ -167,6 +220,10 @@ export class DashboardComponent implements OnInit {
                     },
                     plotOptions: {
                         column: {
+                            dataLabels: {
+                                enabled: true,
+                                format: '{point.y}'
+                            },
                             pointPadding: 0.2,
                             borderWidth: 0
                         }
@@ -194,18 +251,36 @@ export class DashboardComponent implements OnInit {
     }
 
     importFile(event: any) {
-        const file = event.target.files[0];
-
-        let fileReader = new FileReader();
-        fileReader.readAsBinaryString(file);
-
-        fileReader.onload = (e) => {
-            var workbook = XLSX.read(fileReader.result, { type: 'binary' });
-            var sheetNames = workbook.SheetNames;
-            this.mails = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNames[0]]);
-            console.log(this.mails);
-            
+        const target: DataTransfer = <DataTransfer>(event.target);
+        if (target.files.length !== 1) {
+            throw new Error('Cannot use multiple files');
         }
+        const reader: FileReader = new FileReader();
+
+        const header = ["Date de réception", "Expéditeur", "Objet", "Destinataire", "Date de transmission", "Annotation", "Imputation"];
+        function mapRow(row: any) {
+            return {
+              reception: row["Date de réception"],
+              expediteur: row["Expéditeur"],
+              objet: row["Objet"],
+              destinataire: row["Destinataire"],
+              transmission: row["Date de transmission"],
+              annotation: row["Annotation"],
+              imputation: row["Imputation"]
+            };
+        }
+        
+        reader.onload = (e: any) => {
+            const bstr: string = e.target.result;
+            const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+            const wsname: string = wb.SheetNames[0];
+            const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+            this.mails = XLSX.utils.sheet_to_json(ws, { header: header });
+            this.mails = this.mails.map(mapRow);
+            this.mails.shift();
+            console.log(this.mails);
+        };
+        reader.readAsBinaryString(target.files[0]);
     }
 
     getTime(nbreJr: number): Date {
@@ -226,38 +301,42 @@ export class DashboardComponent implements OnInit {
             this.loading[i] = true;
             const formData = new FormData();
             const cu:any = this.authService.currentUser;
-    
-            const direction = this.directions.find((direction: any) => direction.dir_label == this.mails[i]["Destinataire"])
-        
-            formData.append('mail_ref', '');
-            formData.append('mail_corresponding', this.mails[i]["Expéditeur"]);
-            formData.append('mail_object', this.mails[i]["Objet"]);
-            formData.append('mail_date_received', this.mails[i]["Date de réception"]);
-            formData.append('mail_shipping_date', this.mails[i]["Date de transmission"]);
-            formData.append('id_direction', direction.dir_id);
+
+            formData.append('mail_corresponding', this.mails[i].expediteur);
+            formData.append('mail_object', this.mails[i].objet);
+            formData.append('mail_date_received', this.mails[i].reception);
+            formData.append('mail_shipping_date', this.mails[i].transmission);
+            formData.append('mail_annotation', this.mails[i].annotation);
+            formData.append('mail_imputation', this.mails[i].imputation);
+            formData.append('id_direction', this.mails[i].destinataire.slice(0, 2).trim());
             formData.append('id_user', cu.data.user_id);
 
-            
             this.mailService.newMail(formData).subscribe(
                 response => {
                     this.loading[i] = false;
                     if (response.success) {
                         this.success[i] = true;
-                        setTimeout(() => {
-                            this.deleteMail(i);
-                        }, 2000)
+                        formData.append('mail_ref', response.results);
+                        if (this.mails[i].transmission) {
+                            this.mailService.changeMailRegister(formData).subscribe(
+                                response => {
+                                    if (response.success) {
+                                        this.success[i] = true;
+                                    }
+                                    else {
+                                        this.success[i] = false;
+                                    }
+                                }
+                            );
+                        }
                     }
                     else {
                         this.success[i] = false;
                     }
                 }
-            );
+            )
         }
     }    
-
-    deleteMail(index: number) {
-        this.mails.splice(index, 1);
-    }
     
     changeSize(value: string) {
         this.tableSize = +value;
@@ -273,4 +352,9 @@ export class DashboardComponent implements OnInit {
         this.page = 1;
         this.data;
     }
+
+    reload() {
+        location.reload();
+    }
 }
+
