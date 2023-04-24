@@ -8,8 +8,11 @@
                 </button>
             </div>
             <div>
-                <div style="font-size: 17px; text-align: justify;">
-                    {{ notif.body }}
+                <div style="text-align: justify;">
+                    {{ notif.body }} <br>
+                    > Objet : <strong class="text-bg-warning"><i>{{ notif.objet }}</i></strong> <br>
+                    > Expéditeur : <strong><i>{{ notif.expediteur }}</i></strong> <br>
+                    > Destinataire : <strong><i>{{ notif.destinataire }}</i></strong>
                 </div>
                 <small class="text-end">il y'a environ {{ diff(notif.date) }} min</small>
             </div>
