@@ -81,7 +81,7 @@ export class PanelComponent implements OnInit {
                 body: "Le courrier N° " + notification.mail_ref + " réçu le " + formatDate(notification.mail_date_received.toString(), "EEE d MMM y", "fr") + " est toujours en attente de traitement."
               }
               this.notifService.addNotification(notif);
-              Push.create("S2G Courrier", {
+              Push.create("SG2 Courrier", {
                 body: "Le courrier N° " + notification.mail_ref + " réçu le " + formatDate(notification.mail_date_received.toString(), "EEE d MMM y", "fr") + " est toujours en attente de traitement. Veuillez contacter la direction chargée de son traitement svp !",
                 icon: 'favicon.ico',
                 timeout: 20000,

@@ -86,7 +86,7 @@
                         <a>
                             <fa-icon [icon]="faBell" class="me-3"></fa-icon>
                             Notifications
-                            <div class="w3-badge bg-danger ms-3">{{ nbrNotif }}</div>
+                            <div class="w3-badge bg-danger ms-3" *ngIf="nbrNotif != 0">{{ nbrNotif }}</div>
                         </a>
                     </li>
                     <li routerLink="/admin/settings" routerLinkActive="active shadow" *ngIf="currentUser.data.user_role == 'ADMINISTRATEUR'">
