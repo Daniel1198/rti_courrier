@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
 import { ConfigService } from 'src/app/services/config.service';
 import { MailService } from 'src/app/services/mail.service';
 
@@ -18,6 +19,8 @@ export class ArchiveComponent implements OnInit {
   search!: string;
   initialDate!: string;
   finalDate!: string;
+  yesterday!: Date;
+  twoDaysAgo!: Date;
   constructor(
     private mailService: MailService,
     private configService: ConfigService,
@@ -27,6 +30,8 @@ export class ArchiveComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.yesterday = moment().subtract(1, "day").startOf('day').toDate()
+    this.twoDaysAgo = moment().subtract(2, "day").startOf('day').toDate()
     this.id = this.route.snapshot.paramMap.get('id')!;
     if (this.id != '0') {
       this.search = this.id;

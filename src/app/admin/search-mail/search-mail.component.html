@@ -7,7 +7,7 @@
         </nav>    
     </div>
     <div class="content mt-4 w3-animate-opacity">
-        <div class="w3-border p-2">
+        <div class="w3-border p-2 bg-dark text-white">
             <div class="d-flex align-items-center">
                 <img src="assets/images/search.png" class="me-3">
                 Critères de recherche
@@ -31,15 +31,15 @@
                         <input type="date" class="w3-input mx-3 bg-transparent" id="fin" [(ngModel)]="finalDate" (change)="onSearch(search.value)" [disabled]="!initialDate">
                     </div>
                 </div>
-                <div class="w-25 form-group mt-2">
+                <div class="w-50 form-group mt-2">
                     <label for="service" class="txt-blue fw-bold form-label">Etat</label>
-                    <select class="w3-select w3-border bg-transparent" id="service" [disabled]="regValue == '1'" [(ngModel)]="state" (change)="onSearch(search.value)">
+                    <select class="w3-select w3-border bg-transparent" id="service" [(ngModel)]="state" (change)="onSearch(search.value)">
                         <option value="" selected>--- Tous les états ---</option>
                         <option value="1">Transmis</option>
                         <option value="2">Non transmis</option>
                       </select>
                 </div>
-                <div class="w-25 form-group mt-2 ms-3">
+                <!-- <div class="w-25 form-group mt-2 ms-3">
                     <label for="registre" class="txt-blue fw-bold form-label">Registre</label>
                     <select class="w3-select w3-border bg-transparent" id="registre" [(ngModel)]="regValue" (change)="onSearch(search.value)" [disabled]="[1,2,3].includes(+state)">
                         <option value="" selected>--- Tous les régistres ---</option>  
@@ -47,7 +47,7 @@
                         *ngFor="let register of registers"
                          [value]="register.reg_id">{{ register.reg_label }}</option>
                       </select>
-                </div>
+                </div> -->
             </div>
         </div>
 

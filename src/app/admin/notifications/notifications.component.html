@@ -1,14 +1,19 @@
 <div class="w3-animate-right">
-    <div class="bg-light px-3 pt-1">
-        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active" aria-current="page">Notifications</li>
-            </ol>
-        </nav>    
-    </div>
-
     <div class="content my-4 px-3">
-        
+        <div *ngFor="let notif of notifications; let i = index;" class="btn btn-light mb-3 border-0 text-start px-3 py-2 w-100 w3-animate-opacity">
+            <div class="d-flex justify-content-between">
+                <strong>{{ notif.title }}</strong>
+                <button type="button" class="ms-2 mb-1 btn" (click)="remove(i)">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div>
+                <div style="font-size: 17px; text-align: justify;">
+                    {{ notif.body }}
+                </div>
+                <small class="text-end">il y'a environ {{ diff(notif.date) }} min</small>
+            </div>
+        </div>
     </div>
 </div>
     

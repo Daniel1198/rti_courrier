@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faEnvelope, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   loading: boolean = false;
   cu: any;
 
+  isOnline = true;
   Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -42,6 +43,24 @@ export class LoginComponent implements OnInit {
     this.initForm();
   }
 
+  @HostListener('window:online', ['$event'])
+  onOnline(event: any) {
+    this.isOnline = true;
+    this.Toast.fire({
+      icon: 'success',
+      title: "Connexion rétablie"
+    });
+  }
+
+  @HostListener('window:offline', ['$event'])
+  onOffline(event: any) {
+    this.isOnline = false;
+    this.Toast.fire({
+      icon: 'error',
+      title: "Vérifiez votre connexion Internet"
+    });
+  }
+
   initForm() {
     this.formGroup = this.formBuilder.group({
       email: ['', [Validators.email, Validators.required]],
@@ -54,32 +73,39 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.loading = true;
-    const formData = new FormData();
-
-    formData.append('user_email', this.formGroup.get('email')?.value);
-    formData.append('user_pwd', this.formGroup.get('password')?.value);
-
-    this.authService.loginUser(formData).subscribe(
-      response => {
-        this.loading = false;
-        if (response.success) {
-          this.cu = this.authService.currentUser;
-          if (this.cu.data.user_isFirstConnection == 1) {
-            this.router.navigate(['/admin/dashboard']);
+    if (this.isOnline || !this.isOnline) {
+      this.loading = true;
+      const formData = new FormData();
+  
+      formData.append('user_email', this.formGroup.get('email')?.value);
+      formData.append('user_pwd', this.formGroup.get('password')?.value);
+  
+      this.authService.loginUser(formData).subscribe(
+        response => {
+          this.loading = false;
+          if (response.success) {
+            this.cu = this.authService.currentUser;
+            if (this.cu.data.user_isFirstConnection == 1) {
+              this.router.navigate(['/admin/dashboard']);
+            }
+            else {
+              this.router.navigate(['/auth/change-password/' + this.cu.data.user_id]);
+            }
           }
           else {
-            this.router.navigate(['/auth/change-password/' + this.cu.data.user_id]);
+            this.Toast.fire({
+              icon: 'error',
+              title: response.message
+            })
           }
         }
-        else {
-          this.Toast.fire({
-            icon: 'error',
-            title: response.message
-          })
-        }
-      }
-    );
+      );
+    }
+    // else {
+    //   this.Toast.fire({
+    //     icon: 'error',
+    //     title: "Vérifiez votre connexion Internet"
+    //   });
+    // }
   }
-
 }

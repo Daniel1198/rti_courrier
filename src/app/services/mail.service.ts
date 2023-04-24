@@ -40,6 +40,6 @@ export class MailService {
   }
 
   getAttachments(): Observable<any> {
-    return this.http.get<any>(this.urlg + '/read/attachments.php?');
+    return this.http.get<any>(this.urlg + '/read/attachments.php');
   }
 }

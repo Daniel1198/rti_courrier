@@ -289,7 +289,7 @@ export class DashboardComponent implements OnInit {
             this.mails = XLSX.utils.sheet_to_json(ws, { header: header, dateNF: 'yyyy-mm-dd' });
             this.mails = this.mails.map(mapRow);
             this.mails.shift();
-            console.log(this.mails);
+            this.nbrMail = this.mails.length;
         };
         reader.readAsBinaryString(target.files[0]);
     }
@@ -307,30 +307,8 @@ export class DashboardComponent implements OnInit {
         );
     }
 
-    showToast() {
-        if (this.mails.length == 0) {
-            this.Toast.fire({
-                icon: 'success',
-                title: "Données enregistrées avec succès"
-            });
-        }
-        else if (this.mails.length == this.nbrMail) {
-            this.Toast.fire({
-                icon: 'error',
-                title: "Données non enregistrées"
-            });
-        }
-        else if (this.mails.length != this.nbrMail && this.mails.length != 0){
-            this.Toast.fire({
-                icon: 'warning',
-                title: this.nbrSucces + " enregistrés & " + this.nbrErreur + " non enregistrés"
-            });
-        }
-    }
-
     onSubmit() {
         const cu:any = this.authService.currentUser;
-        this.nbrMail = this.mails.length;
         this.mails.forEach(mail => {
             const formData = new FormData();
 
@@ -353,9 +331,17 @@ export class DashboardComponent implements OnInit {
                                     if (res.success) {
                                         const index = this.mails.indexOf(mail);
                                         this.mails.splice(index, 1);
+                                        // this.Toast.fire({
+                                        //     icon: 'success',
+                                        //     title: "Données enregistrées avec succès"
+                                        // });
                                         this.nbrSucces++;
                                     }
                                     else {
+                                        // this.Toast.fire({
+                                        //     icon: 'error',
+                                        //     title: "Données non enregistrées"
+                                        // });
                                         this.nbrErreur++;
                                     }
                                 }
@@ -364,16 +350,23 @@ export class DashboardComponent implements OnInit {
                         else {
                             const index = this.mails.indexOf(mail);
                             this.mails.splice(index, 1);
+                            // this.Toast.fire({
+                            //     icon: 'success',
+                            //     title: "Données enregistrées avec succès"
+                            // });
                             this.nbrSucces++;
                         }
                     }
                     else {
-                        this.nbrErreur++;
+                        this.Toast.fire({
+                            icon: 'error',
+                            title: "Données non enregistrées"
+                        });
                     }
+                    
                 }
             )
         })
-        this.showToast();
         const firstDate = this.firstDayOfWeek.getFullYear() + '-' + ((this.firstDayOfWeek.getMonth() + 1) > 9 ? ((+this.firstDayOfWeek.getMonth() + 1)) : '0' + (this.firstDayOfWeek.getMonth() + 1)) + '-' + (this.firstDayOfWeek.getDate() > 9 ? this.firstDayOfWeek.getDate() : '0' + this.firstDayOfWeek.getDate());
         const lastDate = this.lastDayOfWeek.getFullYear() + '-' + ((this.lastDayOfWeek.getMonth() + 1) > 9 ? ((+this.lastDayOfWeek.getMonth() + 1)) : '0' + (this.lastDayOfWeek.getMonth() + 1)) + '-' + (this.lastDayOfWeek.getDate() > 9 ? this.lastDayOfWeek.getDate() : '0' + this.lastDayOfWeek.getDate());
         this.getStatistics(firstDate, lastDate);

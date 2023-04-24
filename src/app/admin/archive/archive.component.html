@@ -28,14 +28,14 @@
             </div>
         </div>
         <div class="mt-5 text-center w3-animate-opacity" *ngIf="attachmentsByDate.length == 0">
-            Aucune archive correspondant à la recherche n'a été trouvée.
+            Aucune archive trouvée.
         </div>
         <div class="mt-5 w3-animate-opacity" *ngIf=" attachmentsByDate.length != 0">
             <div *ngFor="let data of attachmentsByDate">
                 <div *ngIf="(data.donnees | search: search ? search : '').length != 0">
                     <div class="d-flex align-items-center">
-                        <small class="fw-bold alert alert-success rounded-pill py-1 m-0">{{ data.date == nowDate ? "Aujourd'hui" : data.date }}</small>
-                        <div style="border: 1px dashed rgb(210, 210, 210); width: 90%;" class="ms-2"></div>
+                        <small class="fw-bold alert alert-success rounded-pill py-1 m-0 w-25">{{ data.date == nowDate ? "Aujourd'hui" : ((data.date | date: "yyyy-MM-dd") == (yesterday  | date: "yyyy-MM-dd") ? 'Hier' : ((data.date | date: "yyyy-MM-dd") == (twoDaysAgo  | date: "yyyy-MM-dd") ? 'Avant-hier' : data.date | date: 'EEE d MMM y': undefined : 'fr' | titlecase)) }}</small>
+                        <div style="border: 1px dashed rgb(210, 210, 210);" class="ms-2 w-75"></div>
                     </div>
                     <div class="row my-5">
                         <div class="col-2" *ngFor="let pj of data.donnees | search: search ? search : ''">

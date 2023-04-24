@@ -85,60 +85,68 @@ export class EditMailComponent implements OnInit {
 
     const direction = this.directions.find((direction: any) => direction.dir_label == this.formGroup.get('idDirection')?.value)
 
-    formData.append('mail_ref', this.formGroup.get('ref')?.value);
-    formData.append('mail_corresponding', this.formGroup.get('corresponding')?.value);
-    formData.append('mail_object', this.formGroup.get('object')?.value);
-    formData.append('mail_date_received', this.formGroup.get('dateReceived')?.value);
-    formData.append('id_direction', direction.dir_id);
-    formData.append('id_user', cu.data.user_id);
+    if (direction) {
+      formData.append('mail_ref', this.formGroup.get('ref')?.value);
+      formData.append('mail_corresponding', this.formGroup.get('corresponding')?.value);
+      formData.append('mail_object', this.formGroup.get('object')?.value);
+      formData.append('mail_date_received', this.formGroup.get('dateReceived')?.value);
+      formData.append('id_direction', direction.dir_id);
+      formData.append('id_user', cu.data.user_id);
 
-    if (this.id == "0") {
-      this.mailService.newMail(formData).subscribe(
-        response => {
-          if (response.success) {
-            this.Toast.fire({
-              icon: 'success',
-              title: response.message
-            });
-            this.formGroup.reset();
+      if (this.id == "0") {
+        this.mailService.newMail(formData).subscribe(
+          response => {
+            if (response.success) {
+              this.Toast.fire({
+                icon: 'success',
+                title: response.message
+              });
+              this.formGroup.reset();
+            }
+            else {
+              this.Toast.fire({
+                icon: 'error',
+                title: response.message
+              })
+            }
           }
-          else {
-            this.Toast.fire({
-              icon: 'error',
-              title: response.message
-            })
+        );
+      }
+      else {
+        Swal.fire({
+          title: 'Voulez-vous vraiment enregistrer les modifications apportées à ce courrier ?',
+          showDenyButton: true,
+          confirmButtonText: 'Oui',
+          denyButtonText: `Non`,
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            this.loading = true;
+            this.mailService.updateMail(formData).subscribe(
+              response => {
+                if (response.success) {
+                  this.Toast.fire({
+                    icon: 'success',
+                    title: response.message
+                  });
+                  history.back();
+                }
+                else {
+                  this.Toast.fire({
+                    icon: 'error',
+                    title: response.message
+                  })
+                }
+              }
+            );
           }
-        }
-      );
+        })
+      }
     }
     else {
-      Swal.fire({
-        title: 'Voulez-vous vraiment enregistrer les modifications apportées à ce courrier ?',
-        showDenyButton: true,
-        confirmButtonText: 'Oui',
-        denyButtonText: `Non`,
-      }).then((result) => {
-        /* Read more about isConfirmed, isDenied below */
-        if (result.isConfirmed) {
-          this.loading = true;
-          this.mailService.updateMail(formData).subscribe(
-            response => {
-              if (response.success) {
-                this.Toast.fire({
-                  icon: 'success',
-                  title: response.message
-                });
-                history.back();
-              }
-              else {
-                this.Toast.fire({
-                  icon: 'error',
-                  title: response.message
-                })
-              }
-            }
-          );
-        }
+      this.Toast.fire({
+        icon: 'error',
+        title: "La direction saisie n'existe pas"
       })
     }
   }

@@ -64,7 +64,7 @@
                                 <button class="btn btn-outline-info btn-sm me-3" data-bs-toggle="modal" data-bs-target="#showMoreInfo" (click)="getMail(mail)">
                                     <fa-icon [icon]="faEye"></fa-icon>
                                 </button>
-                                <button class="btn btn-outline-success btn-sm me-3" *ngIf="id === 1 && currentUser.data.user_role != 'CONSULTANT'" data-bs-toggle="modal" data-bs-target="#mailHandled" (click)="getIdMail(mail.mail_ref); error = false; success = true">
+                                <button class="btn btn-outline-success btn-sm me-3" *ngIf="id === 1 && currentUser.data.user_role != 'CONSULTANT'" data-bs-toggle="modal" data-bs-target="#mailHandled" (click)="getIdMail(mail.mail_ref); error = false; success = false">
                                     <fa-icon [icon]="faCheck"></fa-icon>
                                 </button>
                                 <button class="btn btn-outline-primary btn-sm me-3" *ngIf="id === 1 && currentUser.data.user_role != 'CONSULTANT'" [routerLink]="['/admin/registry/edit-mail', mail.mail_ref]">
