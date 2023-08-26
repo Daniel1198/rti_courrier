@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class ConfigService {
 
-  urlg = 'http://localhost/api';
+  urlg = 'http://10.102.0.25:8032/';
   
   constructor() { 
 

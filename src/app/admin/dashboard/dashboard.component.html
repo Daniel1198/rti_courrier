@@ -18,9 +18,9 @@
                 Nouveau courrier
             </button>
 
-            <button class="btn-orange ms-3 w-auto px-3" data-bs-toggle="modal" data-bs-target="#importModal" *ngIf="currentUser.data.user_role != 'CONSULTANT'" (click)="mails = []">
+            <!-- <button class="btn-orange ms-3 w-auto px-3" data-bs-toggle="modal" data-bs-target="#importModal" *ngIf="currentUser.data.user_role != 'CONSULTANT'" (click)="mails = []">
                 <fa-icon [icon]="faFileImport"></fa-icon>
-            </button> 
+            </button>  -->
 
             <a [href]="urlg + '/read/report.php?first_date=' + firstDate.value + '&last_date=' + lastDate.value" target="_blank" class="btn-red ms-3 w-auto px-3 d-flex link-light text-decoration-none">
                 <fa-icon [icon]="faPrint" class="me-1"></fa-icon>

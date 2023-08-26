@@ -1,0 +1,15 @@
+{
+    "name": "SG2 Courrier",
+    "short_name": "SG2C",
+    "start_url": "/",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "icons": [
+      {
+        "src": "assets/favicon.ico",
+        "sizes": "72x72",
+        "type": "image/ico"
+      }
+    ]
+  }
+  

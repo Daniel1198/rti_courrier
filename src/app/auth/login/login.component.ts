@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faEnvelope, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   loading: boolean = false;
   cu: any;
 
-  isOnline = true;
+  isOnline = false;
   Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -40,24 +40,25 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.checkInternetConnectivity();
     this.initForm();
   }
 
-  @HostListener('window:online', ['$event'])
-  onOnline(event: any) {
-    this.isOnline = true;
-    this.Toast.fire({
-      icon: 'success',
-      title: "Connexion rétablie"
+  checkInternetConnectivity() {
+    this.isOnline = navigator.onLine;
+    window.addEventListener('online', () => {
+      this.isOnline = true;
+      this.Toast.fire({
+        icon: 'success',
+        title: "Connexion rétablie"
+      });
     });
-  }
-
-  @HostListener('window:offline', ['$event'])
-  onOffline(event: any) {
-    this.isOnline = false;
-    this.Toast.fire({
-      icon: 'error',
-      title: "Vérifiez votre connexion Internet"
+    window.addEventListener('offline', () => {
+      this.isOnline = false;
+      this.Toast.fire({
+        icon: 'error',
+        title: "Vérifiez votre connexion Internet"
+      });
     });
   }
 
@@ -73,7 +74,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.isOnline || !this.isOnline) {
+    if (this.isOnline) {
       this.loading = true;
       const formData = new FormData();
   
@@ -101,11 +102,11 @@ export class LoginComponent implements OnInit {
         }
       );
     }
-    // else {
-    //   this.Toast.fire({
-    //     icon: 'error',
-    //     title: "Vérifiez votre connexion Internet"
-    //   });
-    // }
+    else {
+      this.Toast.fire({
+        icon: 'error',
+        title: "Vérifiez votre connexion Internet"
+      });
+    }
   }
 }

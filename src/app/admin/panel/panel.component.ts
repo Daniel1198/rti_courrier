@@ -5,7 +5,7 @@ import { ConfigService } from 'src/app/services/config.service';
 import { NotificationsService } from 'src/app/services/notifications.service';
 import Swal from 'sweetalert2';
 import Push from 'push.js';
-import { take, timer } from 'rxjs';
+import { timer } from 'rxjs';
 import { formatDate } from '@angular/common';
 
 @Component({
@@ -28,7 +28,7 @@ export class PanelComponent implements OnInit {
   urlG: string;
   nbrNotif: number = 0;
 
-  isOnline = true;
+  isOnline = false;
   Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
@@ -50,25 +50,46 @@ export class PanelComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.checkInternetConnectivity();
     this.currentUser = this.authService.currentUser;
     this.resetTimer();
-    timer(0, 3600000).subscribe(
-      () => {
-        this.getNotifications();
-      }
-    );
-    timer(0, 1000).subscribe(
-      () => {
-        this.nbrNotif = this.notifService.getNotifications().length
-      }
-    );
+    if (this.isOnline) {
+      timer(0, 3600000).subscribe(
+        () => {
+          this.getNotifications();
+        }
+      );
+      timer(0, 1000).subscribe(
+        () => {
+          this.nbrNotif = this.notifService.getNotifications().length
+        }
+      );
+    }
+  }
+
+  checkInternetConnectivity() {
+    this.isOnline = navigator.onLine;
+    window.addEventListener('online', () => {
+      this.isOnline = true;
+      this.Toast.fire({
+        icon: 'success',
+        title: "Connexion rétablie"
+      });
+    });
+    window.addEventListener('offline', () => {
+      this.isOnline = false;
+      this.Toast.fire({
+        icon: 'error',
+        title: "Vérifiez votre connexion Internet"
+      });
+    });
   }
 
   getNotifications() {
     this.notifService.clearNotifications();
     this.notifService.getMailsWaiting().subscribe(
       response => {
-        if (response.results.length != 0) { 
+        if (response.results.length != 0) {
           response.results.forEach((notification: any) => {
             if (notification.jourdiff != 0) {
               const notif: any = {
@@ -86,7 +107,7 @@ export class PanelComponent implements OnInit {
                 icon: 'favicon.ico',
                 timeout: 20000,
                 onClick: function () {
-                    window.focus();
+                  window.focus();
                 }
               });
             }
@@ -94,24 +115,6 @@ export class PanelComponent implements OnInit {
         }
       }
     )
-  }
-
-  @HostListener('window:online', ['$event'])
-  onOnline(event: any) {
-    this.isOnline = true;
-    this.Toast.fire({
-      icon: 'success',
-      title: "Connexion rétablie"
-    });
-  }
-
-  @HostListener('window:offline', ['$event'])
-  onOffline(event: any) {
-    this.isOnline = false;
-    this.Toast.fire({
-      icon: 'error',
-      title: "Vérifiez votre connexion Internet"
-    });
   }
 
   @HostListener('document:mousemove', ['$event'])
@@ -124,6 +127,14 @@ export class PanelComponent implements OnInit {
   }
 
   SignOut() {
-    this.authService.logoutUser();
+    if (this.isOnline) {
+      this.authService.logoutUser();
+    }
+    else {
+      this.Toast.fire({
+        icon: 'error',
+        title: "Vérifiez votre connexion Internet"
+      });
+    }
   }
 }

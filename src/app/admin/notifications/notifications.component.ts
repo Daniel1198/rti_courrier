@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { timer } from 'rxjs';
 import { NotificationsService } from 'src/app/services/notifications.service';
 import { differenceInMinutes } from 'date-fns';
@@ -10,16 +10,40 @@ import { differenceInMinutes } from 'date-fns';
 })
 export class NotificationsComponent implements OnInit {
   notifications: any[] = [];
+  isOnline: boolean = false;
   constructor(
     private notifService: NotificationsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    timer(0, 60000).subscribe(
-      () => {
-        this.notifications = this.notifService.getNotifications();
-      }
-    )
+    this.checkInternetConnectivity();
+    if (this.isOnline) {
+      timer(0, 60000).subscribe(
+        () => {
+          this.notifications = this.notifService.getNotifications();
+        }
+      )
+    }
+  }
+
+  @HostListener('window:online')
+  onOnline() {
+    this.isOnline = true;
+  }
+
+  @HostListener('window:offline')
+  onOffline() {
+    this.isOnline = false;
+  }
+
+  checkInternetConnectivity() {
+    this.isOnline = navigator.onLine;
+    window.addEventListener('online', () => {
+      this.isOnline = true;
+    });
+    window.addEventListener('offline', () => {
+      this.isOnline = false;
+    });
   }
 
   remove(index: number) {

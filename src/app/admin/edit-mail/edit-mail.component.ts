@@ -97,10 +97,10 @@ export class EditMailComponent implements OnInit {
         this.mailService.newMail(formData).subscribe(
           response => {
             if (response.success) {
-              this.Toast.fire({
+              Swal.fire({
                 icon: 'success',
-                title: response.message
-              });
+                html: response.message + '<br> Le numéro attribué à ce courrier est : <strong>' + response.results + '</strong>'
+              })
               this.formGroup.reset();
             }
             else {

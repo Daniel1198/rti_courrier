@@ -100,11 +100,10 @@
         </div>
     </div>
     <div class="py-4 px-4 overflow-auto print">
-        <router-outlet></router-outlet>
-        <!-- <router-outlet *ngIf="isOnline"></router-outlet> -->
-        <!-- <div class="d-flex align-items-center justify-content-center h-100 w-100" *ngIf="!isOnline">
+        <router-outlet *ngIf="isOnline"></router-outlet>
+        <div class="d-flex align-items-center justify-content-center h-100 w-100" *ngIf="!isOnline">
             Oups ! Vous n'êtes pas connecté à Internet 
-        </div> -->
+        </div>
     </div>
 </div>
 
